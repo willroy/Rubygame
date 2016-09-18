@@ -2,7 +2,11 @@ require 'gosu'
 
 class Player
     def initialize
-        @image = Gosu::Image.new("Resources/Archer/Archer_Front.png")
+        @down = Gosu::Image.new("Resources/Archer/Archer_Front.png")
+        @up = Gosu::Image.new("Resources/Archer/Archer_Back.png")
+        @left = Gosu::Image.new("Resources/Archer/Archer_Left.png")
+        @right = Gosu::Image.new("Resources/Archer/Archer_Right.png")
+        @direction = @down
         @x, @y = 0
     end
 
@@ -18,21 +22,24 @@ class Player
     end
 
     def left
-
+        @direction = @left
         @x -= 4
     end
     def right
+        @direction = @right
         @x += 4
     end
     def up
+        @direction = @up
         @y -= 4
     end
     def down
+        @direction = @down
         @y += 4
     end
 
     def draw
-        @image.draw(@x, @y, 1)
+        @direction.draw(@x, @y, 1)
     end
 end
 class GameWindow < Gosu::Window
@@ -45,7 +52,6 @@ class GameWindow < Gosu::Window
         @player = Player.new
         @player.warp(320, 240)
     end
-
     def update
         if Gosu::button_down? Gosu::KbLeft or Gosu::button_down? Gosu::GpLeft then
             @player.left
