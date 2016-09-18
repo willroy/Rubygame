@@ -6,6 +6,13 @@ class Player
         @x, @y = 0
     end
 
+    def testcollide
+        @x += 4 if @x <= -20
+        @x -= 4 if @x >= 560
+        @y += 4 if @y <= -60
+        @y -= 4 if @y >= 340
+    end
+
     def warp(x, y)
         @x, @y = x, y
     end
@@ -21,11 +28,6 @@ class Player
     end
     def down
         @y += 4
-    end
-
-    def move
-        @x %= 640
-        @y %= 480
     end
 
     def draw
@@ -56,12 +58,12 @@ class GameWindow < Gosu::Window
         if Gosu::button_down? Gosu::KbDown then
             @player.down
         end
-        @player.move
     end
 
     def draw
         @player.draw
         @background_image.draw(0, 0, 0);
+        @player.testcollide
     end
 
     def button_down(id)
