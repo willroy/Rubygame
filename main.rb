@@ -2,6 +2,7 @@ require 'gosu'
 
 class Player
     def initialize
+        @image = Gosu::Image.new("Resources/Archer/Archer_Front.png")
         @down = Gosu::Image.new("Resources/Archer/Archer_Front.png")
         @up = Gosu::Image.new("Resources/Archer/Archer_Back.png")
         @left = Gosu::Image.new("Resources/Archer/Archer_Left.png")
