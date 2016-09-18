@@ -2,15 +2,15 @@ require 'gosu'
 
 class Player
     def initialize
-        @image = Gosu::Image.new("Resources/Char.png")
+        @image = Gosu::Image.new("Resources/Archer/Archer_Front.png")
         @x, @y = 0
     end
 
     def testcollide
-        @x += 4 if @x <= -20
-        @x -= 4 if @x >= 560
-        @y += 4 if @y <= -60
-        @y -= 4 if @y >= 340
+        @x += 4 if @x <= -17
+        @x -= 4 if @x >= 600
+        @y += 4 if @y <= -15
+        @y -= 4 if @y >= 400
     end
 
     def warp(x, y)
@@ -18,6 +18,7 @@ class Player
     end
 
     def left
+
         @x -= 4
     end
     def right
