@@ -4,3 +4,19 @@ There are to branches in this project, the direction bramch: (This is the develo
 and the master branch contains a moving single sprite with arrow keys.
 
 (Made in ruby (if you didn't know (which i doubt)))
+
+Linux Installation Instructions:
+
+1:
+    Do "sudo apt-get install build-essential libsdl2-dev libsdl2-ttf-dev libpango1.0-dev \
+                         libgl1-mesa-dev libfreeimage-dev libopenal-dev libsndfile-dev"
+
+2:
+    Do "sudo apt-get install ruby-dev"
+
+3:
+    Do "gem install gosu"  /  "sudo gem install gosu" (if permission denied)
+
+
+Then download the files with git clone, go into terminal and "cd" into the directory, when there do:
+                                                                                                        "ruby main.rb":x
