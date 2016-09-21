@@ -1,5 +1,5 @@
 require 'gosu'
-
+# Make a load of player subclasses
 class Player
     def initialize
         @image = Gosu::Image.new("Resources/Archer/Archer_Front.png")
@@ -43,6 +43,8 @@ class Player
         @direction.draw(@x, @y, 1)
     end
 end
+
+# Add a check if click function, which starts the game window with a certain character chosen
 class MenuWindow < Gosu::Window
     def initialize
         super 639, 398
@@ -66,10 +68,10 @@ class GameWindow < Gosu::Window
     def initialize 
         super 640, 480
         self.caption = "Game"
-    
+        # put a player if thing that picks a different player subclass for each type of character.
         @background_image = Gosu::Image.new("Resources/GameBack.png")
-
-        @player = Player.new
+        #if @playertype == mage
+        @player = Player.new # Mage.new
         @player.warp(320, 240)
     end
     def update
