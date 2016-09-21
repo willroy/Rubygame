@@ -43,28 +43,44 @@ class Player
         @direction.draw(@x, @y, 1)
     end
 end
+class MenuWindow < Gosu::Window
+    def initialize
+        super 640, 480
+        self.caption = "Menu"
+
+        @Menu_background = Gosu::Image.new("Resources/MenuBack.png")
+
+    def update
+
+    end
+
+    def draw
+        
+    end
+
+    def button_down(id)
+        close if id == Gosu::KbEscape
+    end
+end
+
 class GameWindow < Gosu::Window
     def initialize 
         super 640, 480
         self.caption = "Game"
     
-        @background_image = Gosu::Image.new("Resources/BackOne.png")
+        @background_image = Gosu::Image.new("Resources/GameBack.png")
 
         @player = Player.new
         @player.warp(320, 240)
     end
     def update
-        if Gosu::button_down? Gosu::KbLeft or Gosu::button_down? Gosu::GpLeft then
-            @player.left
-        end
-        if Gosu::button_down? Gosu::KbRight or Gosu::button_down? Gosu::GpRight then
-            @player.right
-        end
-        if Gosu::button_down? Gosu::KbUp then
-            @player.up
-        end
-        if Gosu::button_down? Gosu::KbDown then
-            @player.down
+        if @menuup == false
+            @player.left if Gosu::button_down? Gosu::KbLeft or Gosu::button_down? Gosu::GpLeft
+            @player.right if Gosu::button_down? Gosu::KbRight or Gosu::button_down? Gosu::GpRight
+            @player.down if Gosu::button_down? Gosu::KbUp
+            @player.up if Gosu::button_down? Gosu::KbDown
+        else:
+            menu()
         end
     end
 
@@ -75,9 +91,7 @@ class GameWindow < Gosu::Window
     end
 
     def button_down(id)
-        if id == Gosu::KbEscape
-            close
-        end
+        close if id == Gosu::KbEscape
     end
 end
 
