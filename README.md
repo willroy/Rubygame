@@ -20,3 +20,4 @@ Linux Installation Instructions:
 
 Then download the files with git clone, go into terminal and "cd" into the directory, when there do:
                                                                                                         "ruby main.rb":x
+I am currently creating this in VIM, because its a good editor 👍
