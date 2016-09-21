@@ -45,17 +45,16 @@ class Player
 end
 class MenuWindow < Gosu::Window
     def initialize
-        super 640, 480
+        super 639, 398
         self.caption = "Menu"
-
+        
         @Menu_background = Gosu::Image.new("Resources/MenuBack.png")
-
-    def update
-
+        @cursor = Gosu::Image.new(self, 'Resources/cursor.png')
     end
 
     def draw
-        
+        @Menu_background.draw(0, 0, 0);
+        @cursor.draw(self.mouse_x, self.mouse_y, 0)
     end
 
     def button_down(id)
@@ -74,14 +73,10 @@ class GameWindow < Gosu::Window
         @player.warp(320, 240)
     end
     def update
-        if @menuup == false
-            @player.left if Gosu::button_down? Gosu::KbLeft or Gosu::button_down? Gosu::GpLeft
-            @player.right if Gosu::button_down? Gosu::KbRight or Gosu::button_down? Gosu::GpRight
-            @player.down if Gosu::button_down? Gosu::KbUp
-            @player.up if Gosu::button_down? Gosu::KbDown
-        else:
-            menu()
-        end
+        @player.left if Gosu::button_down? Gosu::KbLeft or Gosu::button_down? Gosu::GpLeft
+        @player.right if Gosu::button_down? Gosu::KbRight or Gosu::button_down? Gosu::GpRight
+        @player.down if Gosu::button_down? Gosu::KbUp
+        @player.up if Gosu::button_down? Gosu::KbDown
     end
 
     def draw
@@ -95,5 +90,5 @@ class GameWindow < Gosu::Window
     end
 end
 
-window = GameWindow.new
+window = MenuWindow.new
 window.show
