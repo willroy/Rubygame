@@ -55,14 +55,17 @@ class MenuWindow < Gosu::Window
         @button1 = Gosu::Image.new(self, 'Resources/button1.png')
         @button1active = Gosu::Image.new(self, 'Resources/button1active.png')
         @button1state = false
+        @requestxy == false
     end
-
+    def update
+        @requestxy == true if text_input == "xy"
+        puts("X: #{self.mouse_x} Y: #{self.mouse_y}") if @requestxy == true
+    end
     def draw
         @Menu_background.draw(0, 0, 0);
-        @button1.draw(10, 10, 1) if @button1state == false
-        @button1active.draw(10, 10, 1) if @button1state == true
+        @button1.draw(482, 22, 1) if @button1state == false
+        @button1active.draw(482, 22, 1) if @button1state == true
         @cursor.draw(self.mouse_x, self.mouse_y, 2)
-        puts("X: #{self.mouse_x} Y: #{self.mouse_y}")
     end
 
     def button_down(id)
