@@ -52,11 +52,17 @@ class MenuWindow < Gosu::Window
         
         @Menu_background = Gosu::Image.new("Resources/MenuBack.png")
         @cursor = Gosu::Image.new(self, 'Resources/cursor.png')
+        @button1 = Gosu::Image.new(self, 'Resources/button1.png')
+        @button1active = Gosu::Image.new(self, 'Resources/button1active.png')
+        @button1state = false
     end
 
     def draw
         @Menu_background.draw(0, 0, 0);
-        @cursor.draw(self.mouse_x, self.mouse_y, 0)
+        @button1.draw(10, 10, 1) if @button1state == false
+        @button1active.draw(10, 10, 1) if @button1state == true
+        @cursor.draw(self.mouse_x, self.mouse_y, 2)
+        puts("X: #{self.mouse_x} Y: #{self.mouse_y}")
     end
 
     def button_down(id)
