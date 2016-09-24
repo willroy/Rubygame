@@ -54,40 +54,59 @@ class MenuWindow < Gosu::Window
         @cursor = Gosu::Image.new(self, 'Resources/cursor.png')
         @button1 = Gosu::Image.new(self, 'Resources/button1.png')
         @button1active = Gosu::Image.new(self, 'Resources/button1active.png')
-        @button1state = false
-        @requestxy == false
+        @button1state = false 
     end
     def update
-        @requestxy == true if text_input == "xy"
-        puts("X: #{self.mouse_x} Y: #{self.mouse_y}") if @requestxy == true
+        puts("X: #{self.mouse_x} Y: #{self.mouse_y}") if Gosu::button_down? Gosu::KbX
+        if self.mouse_x > 472 and self.mouse_x < (472 + @button1.width)
+            if self.mouse_y > 22 and self.mouse_y < (22 + @button1.height)
+                if Gosu::button_down? Gosu::MsLeft
+                    @button1state = true
+                else
+                    @button1state = false
+                end
+            else
+                @button1state = false
+            end
+        else
+            @button1state = false
+        end
     end
     def draw
         @Menu_background.draw(0, 0, 0);
-        @button1.draw(482, 22, 1) if @button1state == false
-        @button1active.draw(482, 22, 1) if @button1state == true
+        @button1.draw(472, 22, 1) if @button1state == false
+        @button1active.draw(472, 22, 1) if @button1state == true
         @cursor.draw(self.mouse_x, self.mouse_y, 2)
     end
 
     def button_down(id)
-        close if id == Gosu::KbEscape
+        case id
+            when Gosu::KbEscape
+                close
+        end
     end
+    
 end
 
 class GameWindow < Gosu::Window
-    def initialize 
+    def initialize(player_type)
         super 640, 480
         self.caption = "Game"
         # put a player if thing that picks a different player subclass for each type of character.
-        @background_image = Gosu::Image.new("Resources/GameBack.png")
-        #if @playertype == mage
+        @background_image = Gosu::Image.new("Resources/BackOne.png")
+        # @player_type = player_type
         @player = Player.new # Mage.new
         @player.warp(320, 240)
+        # @player = Mage.new if @player_type == "Mage"
+        # @player = Archer.new if @player_type == "Archer"
+        # @player = Warrior.new if @player_type == "Warrior"
+        # @player = Assassin.new if @player_type == "Assassin"
     end
     def update
-        @player.left if Gosu::button_down? Gosu::KbLeft or Gosu::button_down? Gosu::GpLeft
-        @player.right if Gosu::button_down? Gosu::KbRight or Gosu::button_down? Gosu::GpRight
-        @player.down if Gosu::button_down? Gosu::KbUp
-        @player.up if Gosu::button_down? Gosu::KbDown
+        @player.left if Gosu::button_down? Gosu::KbLeft
+        @player.right if Gosu::button_down? Gosu::KbRight
+        @player.up if Gosu::button_down? Gosu::KbUp
+        @player.down if Gosu::button_down? Gosu::KbDown
     end
 
     def draw
