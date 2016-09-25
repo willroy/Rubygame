@@ -23,3 +23,5 @@ Then download the files with git clone, go into terminal and "cd" into the direc
 I am currently creating this in VIM, because its a good editor 👍
 
 go to the menuscreen branch to see most updated version
+
+GOING TO TURN INTO A RUBY GEM SOON
