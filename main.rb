@@ -68,10 +68,12 @@ class GameWindow < Gosu::Window
         @player.up if Gosu::button_down? Gosu::KbUp
         @player.down if Gosu::button_down? Gosu::KbDown
         if Gosu::button_down? Gosu::KbK
-            @player.shoot(@cool) if @cool <= 0
-            @cool = 5000
+            if @cool <= 0
+                @player.shoot(@cool) 
+                @cool = 100
+            end
         end
-        @cool -= 1
+        @cool -= 1 if @cool > 0
     end
 
     def draw

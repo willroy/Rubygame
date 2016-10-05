@@ -31,15 +31,13 @@ end
 
 module Rangee
     def shoot(cool)
-        if cool == 0
-            shootq = Random.new
-            if shootq.rand(10) >= 4
-                print "It Hit!"
-                return true
-            else
-                print "It Missed! :("
-                return false
-            end
+        shootq = Random.new
+        if shootq.rand(10) >= 4
+            print "It Hit!"
+            return true
+        else
+            print "It Missed! :("
+            return false
         end
     end
 end
