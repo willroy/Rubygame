@@ -3,7 +3,7 @@ require_relative 'player'
 
 class MenuWindow < Gosu::Window
     def initialize
-        super 639, 398
+        super 640, 480
         self.caption = "Menu"
         
         @Menu_background = Gosu::Image.new("Resources/MenuBack.png")
@@ -16,10 +16,9 @@ class MenuWindow < Gosu::Window
     end
     def draw
         @Menu_background.draw(0, 0, 0);
-        @button1.draw(472, 5, 1) if buttonstate(@button1, 472, 5) == false
-        if buttonstate(@button1, 472, 5) == true
-            @button1active.draw(472, 5, 1)
-            return "Archer"
+        @button1.draw(15, 15, 1) if buttonstate(@button1, 15, 15) == false
+        if buttonstate(@button1, 15, 15) == true
+            true
             close
         end
         @cursor.draw(self.mouse_x, self.mouse_y, 2) 
@@ -49,17 +48,18 @@ class MenuWindow < Gosu::Window
 end
 
 class GameWindow < Gosu::Window
-    def initialize(player_type)
+    def initialize #(player_type)
         super 640, 480
         self.caption = "Game"
         @background_image = Gosu::Image.new("Resources/BackOne.png")
 
-        @player_type = player_type
+        @player_type = "Archer"
+        puts "#{@player_type}\n"
         @player = Mage.new if @player_type == "Mage"
         @player = Archer.new if @player_type == "Archer"
         @player = Warrior.new if @player_type == "Warrior"
         @player = Assassin.new if @player_type == "Assassin"
-
+        @cool = 0
 
     end
     def update
@@ -67,12 +67,17 @@ class GameWindow < Gosu::Window
         @player.right if Gosu::button_down? Gosu::KbRight
         @player.up if Gosu::button_down? Gosu::KbUp
         @player.down if Gosu::button_down? Gosu::KbDown
+        if Gosu::button_down? Gosu::KbK
+            @player.shoot(@cool) if @cool <= 0
+            @cool = 5000
+        end
+        @cool -= 1
     end
 
     def draw
         @player.draw
         @background_image.draw(0, 0, 0);
-        @player.testcollide
+        @player.testcollide()
     end
 
     def button_down(id)
@@ -80,7 +85,23 @@ class GameWindow < Gosu::Window
     end
 end
 
-window = MenuWindow.new
-player = window.show
-game = GameWindow.new(player)
-game.show
+
+menu = MenuWindow.new
+game = GameWindow.new
+while true
+    puts "Menu/Game(M/G): "
+    which = gets.chomp
+    if which == "M" 
+        startg = menu.show
+        break
+    elsif which =="G"
+        game.show
+        break
+    else
+        
+    end
+end
+puts startg
+if which == "M"
+    game.show
+end

@@ -1,12 +1,4 @@
-class Player
-    def initialize
-        @down = Gosu::Image.new("Resources/Archer/Archer_Front.png")
-        @up = Gosu::Image.new("Resources/Archer/Archer_Back.png")
-        @left = Gosu::Image.new("Resources/Archer/Archer_Left.png")
-        @right = Gosu::Image.new("Resources/Archer/Archer_Right.png")
-        @direction = @down
-        @x, @y = 0
-    end
+module Player
     def testcollide
         @x += 4 if @x <= -17
         @x -= 4 if @x >= 600
@@ -37,11 +29,31 @@ class Player
     end
 end
 
-class Archer < Player
+module Rangee
+    def shoot(cool)
+        if cool == 0
+            shootq = Random.new
+            if shootq.rand(10) >= 4
+                print "It Hit!"
+                return true
+            else
+                print "It Missed! :("
+                return false
+            end
+        end
+    end
+end
+
+class Archer
+    include Player, Rangee
     def initialize
         @down = Gosu::Image.new("Resources/Archer/Archer_Front.png")
         @up = Gosu::Image.new("Resources/Archer/Archer_Back.png")
         @left = Gosu::Image.new("Resources/Archer/Archer_Left.png")
         @right = Gosu::Image.new("Resources/Archer/Archer_Right.png")
+        @x = 320
+        @y = 240.0
+        @direction = @down
+        @cool = 0
     end
 end
