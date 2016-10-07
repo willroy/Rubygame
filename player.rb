@@ -29,7 +29,7 @@ module Player
     end
 end
 
-module Rangee
+module Shoot
     def shoot(cool)
         shootq = Random.new
         if shootq.rand(10) >= 4
@@ -42,8 +42,21 @@ module Rangee
     end
 end
 
+module Melee
+    def melee(cool)
+        meleeq = Random.new
+        if melee1.rand(10) >= 4
+            print "It hit"
+            return true
+        else
+            print "It Missed! :("
+            return false
+        end
+    end
+end
+
 class Archer
-    include Player, Rangee
+    include Player, Shoot
     def initialize
         @down = Gosu::Image.new("Resources/Archer/Archer_Front.png")
         @up = Gosu::Image.new("Resources/Archer/Archer_Back.png")
@@ -54,4 +67,19 @@ class Archer
         @direction = @down
         @cool = 0
     end
-end
+end 
+
+class Mage
+    include Player, Shoot
+    def initialize
+        @down = Gosu::Image.new("Resources/Mage/Mage_Front.png")
+        @up = Gosu::Image.new("Resources/Mage/Mage_Back.png")
+        @left = Gosu::Image.new("Resources/Mage/Mage_Left.png")
+        @right = Gosu::Image.new("Resources/Mage/Mage_Right.png")
+        @x = 320
+        @y = 240.0
+        @direction = @down
+        @cool = 0
+    end
+end 
+
