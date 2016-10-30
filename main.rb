@@ -8,27 +8,30 @@ class MenuWindow < Gosu::Window
         self.caption = "Menu"
         
         @Menu_background = Gosu::Image.new("Resources/MenuBack.png")
-        @cursor = Gosu::Image.new(self, 'Resources/cursor.png')
         @button1 = Gosu::Image.new(self, 'Resources/button1.png')
         @button2 = Gosu::Image.new(self, 'Resources/button2.png')
         @button1active = Gosu::Image.new(self, 'Resources/button1a.png')
         @button2active = Gosu::Image.new(self, 'Resources/button2a.png')
+        @button3 = Gosu::Image.new(self, 'Resources/button3.png')
+        @button4 = Gosu::Image.new(self, 'Resources/button4.png')
+        @button3active = Gosu::Image.new(self, 'Resources/button3a.png')
+        @button4active = Gosu::Image.new(self, 'Resources/button4a.png')
         @active1 = false
         @active2 = false
-        $player_type = []
-        $close = []
-
-        #class << self
-        #    attr_accessor :player_type
-        #    attr_accessor :close
-        #end
-
+        @active3 = false
+        @active4 = false
+        $player_type = nil
+        $close = nil
     end
-
+    def needs_cursor?
+        true
+    end
     def draw
         @Menu_background.draw(0, 0, 0);
         @button1.draw(15, 15, 1) if buttonstate(@button1, 15, 15) == false
         @button2.draw(15, 85, 1) if buttonstate(@button2, 15, 85) == false
+        @button3.draw(15, 155, 1) if buttonstate(@button3, 15, 155) == false
+        @button4.draw(15, 225, 1) if buttonstate(@button4, 15, 225) == false
         if buttonstate(@button1, 15, 15)
             @button1active.draw(15, 15, 1)
             @active1 = true
@@ -37,20 +40,38 @@ class MenuWindow < Gosu::Window
             @button2active.draw(15, 85, 1)
             @active2 = true
         end
+        if buttonstate(@button3, 15, 155)
+            @button3active.draw(15, 155, 1)
+            @active3 = true
+        end
+        if buttonstate(@button4, 15, 225)
+            @button4active.draw(15, 225, 1)
+            @active4 = true
+        end
         
         if @active1 == true and Gosu::button_down? Gosu::MsLeft
             $player_type = "Archer"
             $close = true
             close
-        elsif @active2 == true and Gosu:: button_down? Gosu::MsLeft
+        elsif @active2 == true and Gosu::button_down? Gosu::MsLeft
             $player_type = "Mage"
+            $close = true
+            close
+        elsif @active3 == true and Gosu::button_down? Gosu::MsLeft
+            $player_type = "Warrior"
+            $close = true
+            close
+        elsif @active4 == true and Gosu::button_down? Gosu::MsLeft
+            $player_type = "Assassin"
             $close = true
             close
         else
 
         end
-
-        @cursor.draw(self.mouse_x, self.mouse_y, 2) 
+        @active1 = false
+        @active2 = false
+        @active3 = false
+        @active4 = false
     end
     def update
         puts("X: #{self.mouse_x} Y: #{self.mouse_y}") if Gosu::button_down? Gosu::KbX
