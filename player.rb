@@ -1,3 +1,4 @@
+#!/usr/bin/ruby
 module Player
     def testcollide
         @x += 4 if @x <= -17
@@ -83,3 +84,29 @@ class Mage
     end
 end 
 
+class Warrior
+    include Player, Shoot
+    def initialize
+        @down = Gosu::Image.new("Resources/Warrior/Warrior_Front.png")
+        @up = Gosu::Image.new("Resources/Warrior/Warrior_Back.png")
+        @left = Gosu::Image.new("Resources/Warrior/Warrior_Left.png")
+        @right = Gosu::Image.new("Resources/Warrior/Warrior_Right.png")
+        @x = 320
+        @y = 240.0
+        @direction = @down
+        @cool = 0
+    end
+end  
+class Assassin
+    include Player, Shoot
+    def initialize
+        @down = Gosu::Image.new("Resources/Assassin/Assassin_Front.png")
+        @up = Gosu::Image.new("Resources/Assassin/Assassin_Back.png")
+        @left = Gosu::Image.new("Resources/Assassin/Assassin_Left.png")
+        @right = Gosu::Image.new("Resources/Assassin/Assassin_Right.png")
+        @x = 320
+        @y = 240.0
+        @direction = @down
+        @cool = 0
+    end
+end  
