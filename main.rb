@@ -100,6 +100,7 @@ class GameWindow < Gosu::Window
         super 640, 480
         self.caption = "Game"
         @background_image = Gosu::Image.new("Resources/BackOne.png")
+        @shot = Gosu::Image.new("Resources/Shot.png")
 
         puts "#{@player_type}\n"
         @player_type = player_type
@@ -107,30 +108,36 @@ class GameWindow < Gosu::Window
         @player = Archer.new if @player_type == "Archer"
         @player = Warrior.new if @player_type == "Warrior"
         @player = Assassin.new if @player_type == "Assassin"
-        @coolrange = 0
-        @coolmelee = 0
+        @count = 0
+        @shoot = false
     end
     def update
         @player.left if Gosu::button_down? Gosu::KbA
         @player.right if Gosu::button_down? Gosu::KbD
         @player.up if Gosu::button_down? Gosu::KbW
         @player.down if Gosu::button_down? Gosu::KbS
-        if @player_type == "Archer" or @player_type == "Mage"
-            if Gosu::button_down? Gosu::KbK 
-                if @coolrange <= 0
-                    @player.shoot(@cool) 
-                    @coolrange = 100
-                end
-            end
-            @coolrange -= 1 if @coolrange > 0
-        end
 
     end
-
     def draw
         @player.draw
-        @background_image.draw(0, 0, 0);
+        @background_image.draw(0, 0, 0)
         @player.testcollide()
+        if @player_type == "Archer" or @player_type == "Mage"
+            if Gosu::button_down? Gosu::KbK 
+                @shoot = true
+            end
+        end
+        if @count == 100
+            @shoot = false
+        end
+        if @shoot == true
+            @xshot, @yshot = @player.shoot() 
+            @shot.draw((@xshot + @count), @yshot, 2)
+            @count += 10 
+        else
+            @count = 0
+        end
+        
     end
 
     def button_down(id)

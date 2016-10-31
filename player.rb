@@ -1,4 +1,5 @@
 #!/usr/bin/ruby
+require 'gosu'
 module Player
     def testcollide
         @x += 4 if @x <= -17
@@ -31,20 +32,13 @@ module Player
 end
 
 module Shoot
-    def shoot(cool)
-        shootq = Random.new
-        if shootq.rand(10) >= 4
-            print "It Hit!"
-            return true
-        else
-            print "It Missed! :("
-            return false
-        end
+    def shoot()
+            return @x.to_i, @y
     end
 end
 
 module Melee
-    def melee(cool)
+    def melee()
         meleeq = Random.new
         if melee1.rand(10) >= 4
             print "It hit"
@@ -59,6 +53,7 @@ end
 class Archer
     include Player, Shoot
     def initialize
+        @shot = Gosu::Image.new("Resources/Shot.png")
         @down = Gosu::Image.new("Resources/Archer/Archer_Front.png")
         @up = Gosu::Image.new("Resources/Archer/Archer_Back.png")
         @left = Gosu::Image.new("Resources/Archer/Archer_Left.png")
@@ -73,6 +68,7 @@ end
 class Mage
     include Player, Shoot
     def initialize
+        @shot = Gosu::Image.new("Resources/Shot.png")
         @down = Gosu::Image.new("Resources/Mage/Mage_Front.png")
         @up = Gosu::Image.new("Resources/Mage/Mage_Back.png")
         @left = Gosu::Image.new("Resources/Mage/Mage_Left.png")
@@ -85,7 +81,7 @@ class Mage
 end 
 
 class Warrior
-    include Player, Shoot
+    include Player, Melee
     def initialize
         @down = Gosu::Image.new("Resources/Warrior/Warrior_Front.png")
         @up = Gosu::Image.new("Resources/Warrior/Warrior_Back.png")
@@ -98,7 +94,7 @@ class Warrior
     end
 end  
 class Assassin
-    include Player, Shoot
+    include Player, Melee
     def initialize
         @down = Gosu::Image.new("Resources/Assassin/Assassin_Front.png")
         @up = Gosu::Image.new("Resources/Assassin/Assassin_Back.png")
