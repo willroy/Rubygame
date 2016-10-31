@@ -116,7 +116,7 @@ class GameWindow < Gosu::Window
         @player.right if Gosu::button_down? Gosu::KbD
         @player.up if Gosu::button_down? Gosu::KbW
         @player.down if Gosu::button_down? Gosu::KbS
-
+        @player.shot if Gosu::button_down? Gosu::KbK
     end
     def draw
         @player.draw
