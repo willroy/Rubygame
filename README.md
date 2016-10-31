@@ -1,9 +1,8 @@
 # Rubygame
 This project uses 'Gosu', Gosu is a 2D game development library.
-There are to branches in this project, the direction bramch: (This is the development of the characters facing a certain way.)
-and the master branch contains a moving single sprite with arrow keys.
+There is just the master branch atm which contains the WIP game.
 
-(Made in ruby (if you didn't know (which i doubt)))
+(Made in ruby)
 
 Linux Installation Instructions:
 
@@ -19,9 +18,9 @@ Linux Installation Instructions:
 
 
 Then download the files with git clone, go into terminal and "cd" into the directory, when there do:
-                                                                                                        "ruby main.rb":x
+    "./main.rb"
 I am currently creating this in VIM, because its a good editor 👍
 
 go to the menuscreen branch to see most updated version
 
-GOING TO TURN INTO A RUBY GEM SOON
+GOING TO TURN INTO A RUBY GEM SOON I SWEAR
