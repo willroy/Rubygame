@@ -119,7 +119,11 @@ class GameWindow < Gosu::Window
         @player.right if Gosu::button_down? Gosu::KbD
         @player.up if Gosu::button_down? Gosu::KbW
         @player.down if Gosu::button_down? Gosu::KbS
-        @player.shot if Gosu::button_down? Gosu::KbK
+        if Gosu::button_down? Gosu::KbK 
+            if @player_type == "Archer"
+                @player.shot
+            end
+        end
     end
     def draw
         @player.draw
@@ -167,6 +171,7 @@ while true
                 print $player_type
                 game = GameWindow.new($player_type)
                 game.show
+                
             end
         elsif which == "G"
             count = 0

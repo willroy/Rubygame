@@ -26,21 +26,6 @@ module Player
         @direction = @down
         @y += 4
     end
-    def shot
-        if @direction == @left
-            @direction = @shotArcherL
-            @dir = "left"
-        elsif @direction == @right
-            @direction = @shotArcherR
-            @dir = "right"
-        elsif @direction == @up
-            @dir = "up"
-        elsif @direction == @down
-            @direction = @shotArcherD
-            @dir = "down"
-            
-        end
-    end
     def draw 
         @direction.draw(@x, @y, 1)
     end
@@ -53,15 +38,8 @@ module Shoot
 end
 
 module Melee
-    def melee()
-        meleeq = Random.new
-        if melee1.rand(10) >= 4
-            print "It hit"
-            return true
-        else
-            print "It Missed! :("
-            return false
-        end
+    def melee
+        return @dirm, @x, @y
     end
 end
 
@@ -82,12 +60,26 @@ class Archer
         @dir = nil
         @cool = 0
     end
+    def shot
+        if @direction == @left
+            @direction = @shotArcherL
+            @dir = "left"
+        elsif @direction == @right
+            @direction = @shotArcherR
+            @dir = "right"
+        elsif @direction == @up
+            @dir = "up"
+        elsif @direction == @down
+            @direction = @shotArcherD
+            @dir = "down"
+            
+        end
+    end
 end 
 
 class Mage
     include Player, Shoot
     def initialize
-        @shot = Gosu::Image.new("Resources/Shot.png")
         @down = Gosu::Image.new("Resources/Mage/Mage_Front.png")
         @up = Gosu::Image.new("Resources/Mage/Mage_Back.png")
         @left = Gosu::Image.new("Resources/Mage/Mage_Left.png")
