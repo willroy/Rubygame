@@ -100,7 +100,10 @@ class GameWindow < Gosu::Window
         super 640, 480
         self.caption = "Game"
         @background_image = Gosu::Image.new("Resources/BackOne.png")
-        @shot = Gosu::Image.new("Resources/Shot.png")
+        @shotright = Gosu::Image.new("Resources/Shot.png")
+        @shotleft = Gosu::Image.new("Resources/Shotleft.png")
+        @shotup = Gosu::Image.new("Resources/Shotup.png")
+        @shotdown = Gosu::Image.new("Resources/Shotdown.png")
 
         puts "#{@player_type}\n"
         @player_type = player_type
@@ -127,15 +130,20 @@ class GameWindow < Gosu::Window
                 @shoot = true
             end
         end
-        if @count == 100
+        if @count == 100 or @count == -100
             @shoot = false
         end
         if @shoot == true
-            @xshot, @yshot = @player.shoot() 
-            @shot.draw((@xshot + @count), @yshot, 2)
-            @count += 10 
+            @direction, @xshot, @yshot = @player.shoot() 
+            @shotright.draw((@xshot + @count), @yshot, 2) if @direction == "right"
+            @shotleft.draw((@xshot + @count), @yshot, 2) if @direction == "left"
+            @shotup.draw(@xshot, (@yshot + @count), 2) if @direction == "up"
+            @shotdown.draw(@xshot, (@yshot + @count), 2) if @direction == "down"
+            @count += 10 if @direction == "right" or @direction == "down"
+            @count -= 10 if @direction == "left" or @direction == "up"
         else
-            @count = 0
+            @count = 0 if @direction != "left"
+            @count = -30 if @direction == "left"
         end
         
     end

@@ -27,7 +27,19 @@ module Player
         @y += 4
     end
     def shot
-        @direction = @shotArcher
+        if @direction == @left
+            @direction = @shotArcherL
+            @dir = "left"
+        elsif @direction == @right
+            @direction = @shotArcherR
+            @dir = "right"
+        elsif @direction == @up
+            @dir = "up"
+        elsif @direction == @down
+            @direction = @shotArcherD
+            @dir = "down"
+            
+        end
     end
     def draw 
         @direction.draw(@x, @y, 1)
@@ -36,7 +48,7 @@ end
 
 module Shoot
     def shoot()
-        return @x, @y
+        return @dir, @x, @y
     end
 end
 
@@ -56,7 +68,9 @@ end
 class Archer
     include Player, Shoot
     def initialize
-        @shotArcher = Gosu::Image.new("Resources/Archer/Archer_Rightshoot.png")
+        @shotArcherR = Gosu::Image.new("Resources/Archer/Archer_Rightshoot.png")
+        @shotArcherL = Gosu::Image.new("Resources/Archer/Archer_Leftshoot.png")
+        @shotArcherD = Gosu::Image.new("Resources/Archer/Archer_Frontshoot.png")
         @shot = Gosu::Image.new("Resources/Shot.png")
         @down = Gosu::Image.new("Resources/Archer/Archer_Front.png")
         @up = Gosu::Image.new("Resources/Archer/Archer_Back.png")
@@ -65,6 +79,7 @@ class Archer
         @x = 320
         @y = 240.0
         @direction = @down
+        @dir = nil
         @cool = 0
     end
 end 
