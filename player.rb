@@ -57,6 +57,7 @@ class Archer
         @x = 320
         @y = 240.0
         @direction = @down
+        @dirm = nil
         @dir = nil
         @cool = 0
     end
@@ -80,6 +81,10 @@ end
 class Mage
     include Player, Shoot
     def initialize
+        @shotMageR = Gosu::Image.new("Resources/Archer/Archer_Rightshoot.png")
+        @shotMageL = Gosu::Image.new("Resources/Archer/Archer_Leftshoot.png")
+        @shotMageD = Gosu::Image.new("Resources/Archer/Archer_Frontshoot.png")
+        @shot = Gosu::Image.new("Resources/Shot.png")
         @down = Gosu::Image.new("Resources/Mage/Mage_Front.png")
         @up = Gosu::Image.new("Resources/Mage/Mage_Back.png")
         @left = Gosu::Image.new("Resources/Mage/Mage_Left.png")
@@ -88,6 +93,21 @@ class Mage
         @y = 240.0
         @direction = @down
         @cool = 0
+    end
+    def shot
+        if @direction == @left
+            @direction = @shotMageL
+            @dir = "left"
+        elsif @direction == @right
+            @direction = @shotMageR
+            @dir = "right"
+        elsif @direction == @up
+            @dir = "up"
+        elsif @direction == @down
+            @direction = @shotMageD
+            @dir = "down"
+            
+        end
     end
 end 
 

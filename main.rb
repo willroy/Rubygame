@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 require 'gosu'
 require_relative 'player'
+require_relative 'objects'
 
 class MenuWindow < Gosu::Window
     def initialize
@@ -58,7 +59,7 @@ class MenuWindow < Gosu::Window
             $close = true
             close
         elsif @active3 == true and Gosu::button_down? Gosu::MsLeft
-            $player_type = "Warrior"
+            player_type = "Warrior"
             $close = true
             close
         elsif @active4 == true and Gosu::button_down? Gosu::MsLeft
@@ -111,6 +112,7 @@ class GameWindow < Gosu::Window
         @player = Archer.new if @player_type == "Archer"
         @player = Warrior.new if @player_type == "Warrior"
         @player = Assassin.new if @player_type == "Assassin"
+        @target = Object.new
         @count = 0
         @shoot = false
     end
@@ -126,6 +128,7 @@ class GameWindow < Gosu::Window
         end
     end
     def draw
+        @target.draw
         @player.draw
         @background_image.draw(0, 0, 0)
         @player.testcollide()
