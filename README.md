@@ -26,4 +26,4 @@ I am currently creating this in VIM, because its a good editor 👍
 
 go to the main branch to see most updated version
 
-Going to turn into A RUBY GEM SOON SOon soon
+Going to turn into A RUBY GEM SOON SOon soon (aka never)
