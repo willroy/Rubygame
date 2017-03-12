@@ -115,10 +115,28 @@ class MenuWindow < Gosu::Window
     end
 end
 class EditorWindow < Gosu::Window
-    def initialize
+    #need to stop screen going Black
+    def initialize(player_type)
         super 640, 480
         self.caption = "Editor"
         @background_image = Gosu::Image.new("Resources/BackOne.png")
+        @player_type = player_type
+        puts "#{@player_type}"
+
+        @object = Wall.new
+        $close = nil
+    end
+    def draw
+        @background_image.draw(0, 0, 0)
+        @x, @y = self.mouse_x, self.mouse_y unless Gosu::button_down? Gosu::MsLeft
+        @object.draw(@x, @y)
+    end
+    def needs_cursor?
+        true
+        #makes the window show cursor over the top
+    end
+    def button_down(id)
+        close if id == Gosu::KbEscape
     end
 end
 class GameWindow < Gosu::Window
@@ -190,19 +208,20 @@ menu = MenuWindow.new
 playertypes = ["Archer", "Mage", "Warrior", "Assassin"]
 
 while true
-    puts "Menu/Game(M/G): "
+    puts "Menu/Game/Editor(M/G/E): "
     which = gets.chomp
     while true
         if which == "M" 
-            startg = menu.show 
+            menu.show 
             if $close == true
                 print $player_type
                 game = GameWindow.new($player_type)
                 game.show
-                
+                break
             end
         elsif which == "G"
             while true
+                puts "Please type a player type: "
                 player = gets.chomp()
                 count = 0
                 game = GameWindow.new(player)
@@ -215,11 +234,25 @@ while true
                         count += 1
                     end
                 end
+                break
             end
-        elsif which == "GM"
-            print $player_type
-            game = GameWindow.new($player_type)
-            game.show
+        elsif which == "E"
+            while true
+                puts "Please type a player type: "
+                player = gets.chomp()
+                count = 0
+                editor = EditorWindow.new(player)
+                playertypes.each do |x|
+                    if player == x
+                        editor.show
+                    elsif count == 4
+                        print "Choose Player Type: "
+                    else
+                        count += 1
+                    end
+                end
+                break
+            end
         else
             break
         end
