@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+#!/ur/bin/ruby
 require 'gosu'
 module Player
     def testcollide
@@ -31,12 +31,6 @@ module Player
     end
 end
 
-module Shoot
-    def shoot()
-        return @dir, @x, @y
-    end
-end
-
 module Melee
     def melee
         return @dirm, @x, @y
@@ -44,12 +38,15 @@ module Melee
 end
 
 class Archer
-    include Player, Shoot
+    include Player
     def initialize
         @shotArcherR = Gosu::Image.new("Resources/Archer/Archer_Rightshoot.png")
         @shotArcherL = Gosu::Image.new("Resources/Archer/Archer_Leftshoot.png")
         @shotArcherD = Gosu::Image.new("Resources/Archer/Archer_Frontshoot.png")
-        @shot = Gosu::Image.new("Resources/Shot.png")
+        @shotright = Gosu::Image.new("Resources/Projectiles/ShotArcher.png")
+        @shotleft = Gosu::Image.new("Resources/Projectiles/Shotleft.png")
+        @shotup = Gosu::Image.new("Resources/Projectiles/Shotup.png")
+        @shotdown = Gosu::Image.new("Resources/Projectiles/Shotdown.png")
         @down = Gosu::Image.new("Resources/Archer/Archer_Front.png")
         @up = Gosu::Image.new("Resources/Archer/Archer_Back.png")
         @left = Gosu::Image.new("Resources/Archer/Archer_Left.png")
@@ -72,19 +69,24 @@ class Archer
             @dir = "up"
         elsif @direction == @down
             @direction = @shotArcherD
-            @dir = "down"
-            
+            @dir = "down" 
         end
+    end
+    def shoot()
+        return @dir, @x, @y, @shotright, @shotleft, @shotup, @shotdown
     end
 end 
 
 class Mage
-    include Player, Shoot
+    include Player
     def initialize
-        @shotMageR = Gosu::Image.new("Resources/Archer/Archer_Rightshoot.png")
+        @shotMageR = Gosu::Image.new("Resources/Mage/Mage_Rightshoot.png")
         @shotMageL = Gosu::Image.new("Resources/Archer/Archer_Leftshoot.png")
         @shotMageD = Gosu::Image.new("Resources/Archer/Archer_Frontshoot.png")
-        @shot = Gosu::Image.new("Resources/Shot.png")
+        @shotright = Gosu::Image.new("Resources/Projectiles/ShotMage.png")
+        @shotleft = Gosu::Image.new("Resources/Projectiles/ShotMage.png")
+        @shotup = Gosu::Image.new("Resources/Projectiles/ShotMage.png")
+        @shotdown = Gosu::Image.new("Resources/Projectiles/ShotMage.png")
         @down = Gosu::Image.new("Resources/Mage/Mage_Front.png")
         @up = Gosu::Image.new("Resources/Mage/Mage_Back.png")
         @left = Gosu::Image.new("Resources/Mage/Mage_Left.png")
@@ -108,6 +110,9 @@ class Mage
             @dir = "down"
             
         end
+    end
+    def shoot()
+        return @dir, @x, @y, @shotright, @shotleft, @shotup, @shotdown
     end
 end 
 
