@@ -12,110 +12,44 @@ class MenuWindow < Gosu::Window
         self.caption = "Menu"
         #Title of window
         @Menu_background = Gosu::Image.new("Resources/MenuBack.png")
-        @button1 = Gosu::Image.new(self, "Resources/button1.png")
-        @button2 = Gosu::Image.new(self, "Resources/button2.png")
-        @button1active = Gosu::Image.new(self, "Resources/button1a.png")
-        @button2active = Gosu::Image.new(self, "Resources/button2a.png")
-        @button3 = Gosu::Image.new(self, "Resources/button3.png")
-        @button4 = Gosu::Image.new(self, "Resources/button4.png")
-        @button3active = Gosu::Image.new(self, "Resources/button3a.png")
-        @button4active = Gosu::Image.new(self, "Resources/button4a.png")
-        @button5 = Gosu::Image.new(self, "Resources/button5.png")
-        @button5active = Gosu::Image.new(self, "Resources/button5a.png")
-        #setting multiple variables to button and background pngs
-        @active1 = false
-        @active2 = false
-        @active3 = false
-        @active4 = false
-        @active5 = false
+
+        @buttons = [
+            Button.new(self, "button1", "Archer", 15, 15, true),
+            Button.new(self, "button2", "Mage", 15, 85, true),
+            Button.new(self, "button3", "Warrior", 15, 155, true),
+            Button.new(self, "button4", "Assassin", 15, 225, true),
+            Button.new(self, "button5", nil,  200, 225, nil)
+        ]
+
         #variables which become true if specific button is pressed
         $player_type = nil
         $close = false
         #global player_type and close to make sure menu closes and player type is accessible
     end
+    
     def needs_cursor?
         true
         #makes the window show cursor over the top
     end
+
     def draw
         @Menu_background.draw(0, 0, 0);
-        @button1.draw(15, 15, 1) if buttonstate(@button1, 15, 15) == false
-        @button2.draw(15, 85, 1) if buttonstate(@button2, 15, 85) == false
-        @button3.draw(15, 155, 1) if buttonstate(@button3, 15, 155) == false
-        @button4.draw(15, 225, 1) if buttonstate(@button4, 15, 225) == false
-        @button5.draw(200, 225, 1) if buttonstate(@button5, 200, 225) == false
+        @buttons.each {|b| b.draw}
 
-        #Shows not active button state unless the state is true and the mouse is on top of button
-        if buttonstate(@button1, 15, 15)
-            @button1active.draw(15, 15, 1)
-            @active1 = true
+        @buttons.each do |b|
+            if b.clicked?
+                $player_type = b.character
+                $close = b.close_state
+                close
+            end
         end
-        if buttonstate(@button2, 15, 85)
-            @button2active.draw(15, 85, 1)
-            @active2 = true
-        end
-        if buttonstate(@button3, 15, 155)
-            @button3active.draw(15, 155, 1)
-            @active3 = true
-        end
-        if buttonstate(@button4, 15, 225)
-            @button4active.draw(15, 225, 1)
-            @active4 = true
-        end
-        if buttonstate(@button5, 200, 225)
-            @button5active.draw(200, 225, 1)
-            @active5 = true
-        end
-        #if it is true than draw the active state buttons
-        
-        if @active1 == true and Gosu::button_down? Gosu::MsLeft
-            $player_type = "Archer"
-            $close = true
-            close
-        elsif @active2 == true and Gosu::button_down? Gosu::MsLeft
-            $player_type = "Mage"
-            $close = true
-            close
-        elsif @active3 == true and Gosu::button_down? Gosu::MsLeft
-            player_type = "Warrior"
-            $close = true
-            close
-        elsif @active4 == true and Gosu::button_down? Gosu::MsLeft
-            $player_type = "Assassin"
-            $close = true
-            close
-        elsif @active5 == true and Gosu::button_down? Gosu::MsLeft
-            $close = nil
-            close
-        else
-        #sets the player type and close variables (player type is according to button)
-
-        end
-        @active1 = false
-        @active2 = false
-        @active3 = false
-        @active4 = false
-        @active5 = false
-        #sets the states back and continues loop throughout draw method
     end
+        
     def update
         puts("X: #{self.mouse_x} Y: #{self.mouse_y}") if Gosu::button_down? Gosu::KbX
         #testing feature for getting coords
     end
-    def buttonstate(button, coordsx, coordsy)
-        if self.mouse_x > coordsx and self.mouse_x < (coordsx + button.width)
-            if self.mouse_y > coordsy and self.mouse_y < (coordsy + button.height)
-                true
-            else
-                false
-            end
-        else
-            false
-        end
-        #ah yes, the mighty ominous "buttonstate" function. this tests if the mouse is on the button by testing areas
-        #between the x and y of the bottom left and the top right coords
-        #returns true or false depending on what is going on.
-    end
+
     def button_down(id)
         case id
             when Gosu::KbEscape
@@ -124,6 +58,45 @@ class MenuWindow < Gosu::Window
         #if pressed escape (esc) it will exit
     end
 end
+
+class Button
+    attr_accessor :character, :close_state
+    def initialize(window, name, character, x, y, close_state=true)
+        @window = window
+        @name = name
+        @character = character
+        @close_state = close_state
+        @x = x
+        @y = y
+        @main_image = Gosu::Image.new(@window, "Resources/#{name}.png")
+        @active_image = Gosu::Image.new(@window, "Resources/#{name}a.png")
+    end
+
+    def active?
+        if @window.mouse_x > @x and @window.mouse_x < (@x + @main_image.width)
+            if @window.mouse_y > @y and @window.mouse_y < (@y + @main_image.height)
+                return true
+            end
+        end
+        false
+        #ah yes, the mighty ominous "buttonstate" function. this tests if the mouse is on the button by testing areas
+        #between the x and y of the bottom left and the top right coords
+        #returns true or false depending on what is going on.
+    end
+
+    def clicked?
+        active? and Gosu::button_down? Gosu::MsLeft
+    end
+
+    def draw
+        if active?
+            @active_image.draw(@x, @y, 1)
+        else
+            @main_image.draw(@x, @y, 1)
+        end
+    end
+end
+
 class EditorWindow < Gosu::Window
     #need to stop screen going Black
     def initialize(player_type)
@@ -179,6 +152,7 @@ class EditorWindow < Gosu::Window
         #between the x and y of the bottom left and the top right coords
         #returns true or false depending on what is going on.
     end
+
     def button_down(id)
         close if id == Gosu::KbEscape
     end

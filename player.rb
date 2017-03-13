@@ -111,7 +111,7 @@ class Mage
 end 
 
 class Warrior
-    include Player, Melee
+    include Player
     def initialize
         @down = Gosu::Image.new("Resources/Warrior/Warrior_Front.png")
         @up = Gosu::Image.new("Resources/Warrior/Warrior_Back.png")
@@ -122,12 +122,9 @@ class Warrior
         @direction = @down
         @cool = 0
     end
-    def melee()
-        #return somthing (i'll work it out)
-    end
 end  
 class Assassin
-    include Player, Melee
+    include Player
     def initialize
         @down = Gosu::Image.new("Resources/Assassin/Assassin_Front.png")
         @up = Gosu::Image.new("Resources/Assassin/Assassin_Back.png")
@@ -137,8 +134,5 @@ class Assassin
         @y = 240.0
         @direction = @down
         @cool = 0
-    end
-    def melee()
-        #return somthing (i'll work it out)
     end
 end  
