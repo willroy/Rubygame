@@ -26,8 +26,11 @@ module Objects
         @direction = @down
         @y += 4
     end
-    def draw(x=200, y=260)
-        @direction.draw(x, y, 1)
+    def draw
+        @direction.draw(@x, @y, 1)
+    end
+    def setpos(x=@x, y=@y)
+        @x, @y = x, y
     end
 end
 

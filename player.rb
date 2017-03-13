@@ -31,12 +31,6 @@ module Player
     end
 end
 
-module Melee
-    def melee
-        return @dirm, @x, @y
-    end
-end
-
 class Archer
     include Player
     def initialize
@@ -81,8 +75,8 @@ class Mage
     include Player
     def initialize
         @shotMageR = Gosu::Image.new("Resources/Mage/Mage_Rightshoot.png")
-        @shotMageL = Gosu::Image.new("Resources/Archer/Archer_Leftshoot.png")
-        @shotMageD = Gosu::Image.new("Resources/Archer/Archer_Frontshoot.png")
+        @shotMageL = Gosu::Image.new("Resources/Mage/Mage_Left.png")
+        @shotMageD = Gosu::Image.new("Resources/Mage/Mage_Front.png")
         @shotright = Gosu::Image.new("Resources/Projectiles/ShotMage.png")
         @shotleft = Gosu::Image.new("Resources/Projectiles/ShotMage.png")
         @shotup = Gosu::Image.new("Resources/Projectiles/ShotMage.png")
@@ -128,6 +122,9 @@ class Warrior
         @direction = @down
         @cool = 0
     end
+    def melee()
+        #return somthing (i'll work it out)
+    end
 end  
 class Assassin
     include Player, Melee
@@ -140,5 +137,8 @@ class Assassin
         @y = 240.0
         @direction = @down
         @cool = 0
+    end
+    def melee()
+        #return somthing (i'll work it out)
     end
 end  
