@@ -1,7 +1,5 @@
 TODO LIST
 
-move the button class into object.rb
-remove all player_type global variables (use attribute accessor (attr_accessor :player_type))
 comment all editor def and code to get out of way while in development
 pick up editor later
 create sword / dagger animations and images and code for warrior and assassin.

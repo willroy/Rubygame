@@ -7,6 +7,8 @@ require_relative 'objects'
 #Main menu class for character selection
 class MenuWindow < Gosu::Window
     #Subclass of Gosu::Window graphics
+    attr_accessor :player_type 
+    attr_accessor :closee
     def initialize
         super 640, 480
         self.caption = "Menu"
@@ -22,11 +24,16 @@ class MenuWindow < Gosu::Window
         ]
 
         #variables which become true if specific button is pressed
-        $player_type = nil
-        $close = false
+        @player_type = nil
+        @closee = false
         #global player_type and close to make sure menu closes and player type is accessible
     end
-    
+    def player_type
+        @player_type
+    end
+    def closee
+        @closee
+    end
     def needs_cursor?
         true
         #makes the window show cursor over the top
@@ -38,8 +45,8 @@ class MenuWindow < Gosu::Window
 
         @buttons.each do |b|
             if b.clicked?
-                $player_type = b.character
-                $close = b.close_state
+                @player_type = b.character
+                @closee = b.close_state
                 close
             end
         end
@@ -51,55 +58,14 @@ class MenuWindow < Gosu::Window
     end
 
     def button_down(id)
-        case id
-            when Gosu::KbEscape
-                close
-        end
-        #if pressed escape (esc) it will exit
-    end
-end
-
-class Button
-    attr_accessor :character, :close_state
-    def initialize(window, name, character, x, y, close_state=true)
-        @window = window
-        @name = name
-        @character = character
-        @close_state = close_state
-        @x = x
-        @y = y
-        @main_image = Gosu::Image.new(@window, "Resources/#{name}.png")
-        @active_image = Gosu::Image.new(@window, "Resources/#{name}a.png")
+        close if id == Gosu::KbEscape
     end
 
-    def active?
-        if @window.mouse_x > @x and @window.mouse_x < (@x + @main_image.width)
-            if @window.mouse_y > @y and @window.mouse_y < (@y + @main_image.height)
-                return true
-            end
-        end
-        false
-        #ah yes, the mighty ominous "buttonstate" function. this tests if the mouse is on the button by testing areas
-        #between the x and y of the bottom left and the top right coords
-        #returns true or false depending on what is going on.
-    end
-
-    def clicked?
-        active? and Gosu::button_down? Gosu::MsLeft
-    end
-
-    def draw
-        if active?
-            @active_image.draw(@x, @y, 1)
-        else
-            @main_image.draw(@x, @y, 1)
-        end
-    end
 end
 
 class EditorWindow < Gosu::Window
     #need to stop screen going Black
-    def initialize(player_type)
+    def initialize(player_type, close)
         super 640, 480
         self.caption = "Editor"
         @background_image = Gosu::Image.new("Resources/BackOne.png")
@@ -110,7 +76,7 @@ class EditorWindow < Gosu::Window
         @buttonED = Gosu::Image.new(self, "Resources/buttonED.png")
         @buttonEDactive = Gosu::Image.new(self, "Resources/buttonEDa.png")
         @activeED = false
-        $close = nil
+        @close = nil
     end
     def needs_cursor?
         true
@@ -130,7 +96,7 @@ class EditorWindow < Gosu::Window
             @activeED = true
         end
         if @activeED == true and Gosu::button_down? Gosu::MsLeft
-            $close = true
+            @close = true
             @object.setpos(@x, @y)
             close
         else
@@ -230,24 +196,27 @@ while true
     which = gets.chomp
     while true
         if which == "M" 
-            menu.show 
-            if $close == true
-                print $player_type
-                game = GameWindow.new($player_type)
+            menu.show
+            closee = menu.closee
+            player_type = menu.player_type
+            if closee == true
+                game = GameWindow.new(player_type)
                 game.show
                 break
-            elsif $close == nil
+            elsif closee == nil
                 puts "Please type a player type: "
                 player = gets.chomp()
                 count = 0
-                editor = EditorWindow.new(player)
+                editor = EditorWindow.new(player, closee)
                 playertypes.each do |x|
                     if player == x
-                        editor.show
-                        if $close == true
+                        if editor.show
+                            puts "hello"
+                        end
+                        if closee == true
                             menu.show
-                            print $player_type
-                            game = GameWindow.new($player_type)
+                            print player_type
+                            game = GameWindow.new(player_type)
                             game.show
                             break
                         end
@@ -282,7 +251,7 @@ while true
                 puts "Please type a player type: "
                 player = gets.chomp()
                 count = 0
-                editor = EditorWindow.new(player)
+                editor = EditorWindow.new(player, closee)
                 playertypes.each do |x|
                     if player == x
                         editor.show
