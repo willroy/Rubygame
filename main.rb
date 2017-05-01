@@ -82,8 +82,7 @@ class EditorWindow < Gosu::Window
         true
         #makes the window show cursor over the top
     end
-    def update
-
+    def update 
     end
     def draw
         @background_image.draw(0, 0, 0)
@@ -137,6 +136,7 @@ class GameWindow < Gosu::Window
         @object = Wall.new
         @count = 0
         @shoot = false
+        puts "4"
     end
     def update
         @player.left if Gosu::button_down? Gosu::KbA
@@ -186,32 +186,18 @@ class GameWindow < Gosu::Window
     end
 end
 
-
-def MenuStart()
-    menu = MenuWindow.new
-    menu.show
-    return menu.closee
-end
-def GameStart(player_type)
-    game = GameWindow.new(player_type)
-    game.show
-end
-def EditorStart(player_type, closee)
-    editor = EditorWindow.new(player_type, closee)
-    editor.show
-end
-
-
 while true
-    player_type, closee = MenuStart()
-    if closee == true
-        GameStart(player_type)
-        break
-    elsif closee == nil
+    menu = MenuWindow.new
+    player_type, closee = menu.player_type, menu.closee
+    game = GameWindow.new(player_type)
+    editor = EditorWindow.new(player_type, closee)
+    game.show()
+    break
+    if closee == nil
         EditorStart(player_type, closee)
         if closee == true
-            player_type, closee = MenuStart()
-            GameStart(player_type)
+            player_type, closee = menu.player_type, menu.closee
+            game.show(player_type)
             break
         end
         break
