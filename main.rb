@@ -47,6 +47,7 @@ class MenuWindow < Gosu::Window
             if b.clicked?
                 @player_type = b.character
                 @closee = b.close_state
+                puts "#{@closee}"
                 close
             end
         end
@@ -76,7 +77,6 @@ class EditorWindow < Gosu::Window
         @buttonED = Gosu::Image.new(self, "Resources/buttonED.png")
         @buttonEDactive = Gosu::Image.new(self, "Resources/buttonEDa.png")
         @activeED = false
-        @close = nil
     end
     def needs_cursor?
         true
@@ -129,7 +129,6 @@ class GameWindow < Gosu::Window
         self.caption = "Game"
         @background_image = Gosu::Image.new("Resources/BackOne.png")
 
-        puts "#{@player_type}\n"
         @player_type = player_type
         @player = Mage.new if @player_type == "Mage"
         @player = Archer.new if @player_type == "Archer"
@@ -188,86 +187,35 @@ class GameWindow < Gosu::Window
 end
 
 
-menu = MenuWindow.new
-playertypes = ["Archer", "Mage", "Warrior", "Assassin"]
+def MenuStart()
+    menu = MenuWindow.new
+    menu.show
+    return menu.closee
+end
+def GameStart(player_type)
+    game = GameWindow.new(player_type)
+    game.show
+end
+def EditorStart(player_type, closee)
+    editor = EditorWindow.new(player_type, closee)
+    editor.show
+end
+
 
 while true
-    puts "Menu/Game/Editor(M/G/E): "
-    which = gets.chomp
-    while true
-        if which == "M" 
-            menu.show
-            closee = menu.closee
-            player_type = menu.player_type
-            if closee == true
-                game = GameWindow.new(player_type)
-                game.show
-                break
-            elsif closee == nil
-                puts "Please type a player type: "
-                player = gets.chomp()
-                count = 0
-                editor = EditorWindow.new(player, closee)
-                playertypes.each do |x|
-                    if player == x
-                        if editor.show
-                            puts "hello"
-                        end
-                        if closee == true
-                            menu.show
-                            print player_type
-                            game = GameWindow.new(player_type)
-                            game.show
-                            break
-                        end
-                    elsif count == 4
-                        print "Choose Player Type: "
-                    else
-                        count += 1
-                    end
-                    break
-                end
-                break
-            end
-        elsif which == "G"
-            while true
-                puts "Please type a player type: "
-                player = gets.chomp()
-                count = 0
-                game = GameWindow.new(player)
-                playertypes.each do |x|
-                    if player == x
-                        game.show
-                    elsif count == 4
-                        print "Choose Player Type: "
-                    else
-                        count += 1
-                    end
-                end
-                break
-            end
-        elsif which == "E"
-            while true
-                puts "Please type a player type: "
-                player = gets.chomp()
-                count = 0
-                editor = EditorWindow.new(player, closee)
-                playertypes.each do |x|
-                    if player == x
-                        editor.show
-                    elsif count == 4
-                        print "Choose Player Type: "
-                    else
-                        count += 1
-                    end
-                end
-                break
-            end
-        else
+    player_type, closee = MenuStart()
+    if closee == true
+        GameStart(player_type)
+        break
+    elsif closee == nil
+        EditorStart(player_type, closee)
+        if closee == true
+            player_type, closee = MenuStart()
+            GameStart(player_type)
             break
         end
         break
     end
-    break
 end
+
 print("\n\n")

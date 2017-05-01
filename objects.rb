@@ -27,7 +27,7 @@ module Objects
         @y += 4
     end
     def draw
-        @direction.draw(@x, @y, 1)
+        @direction.draw(@x.to_i, @y.to_i, 1)
     end
     def setpos(x=@x, y=@y)
         @x, @y = x, y
@@ -41,8 +41,8 @@ class Wall
         @up = Gosu::Image.new("Resources/Objects/Stone_Wall.png")
         @left = Gosu::Image.new("Resources/Objects/Stone_Wall.png")
         @right = Gosu::Image.new("Resources/Objects/Stone_Wall.png")
-        @x = 200.0
-        @y = 260.0
+        @x = 200
+        @y = 260
         @direction = @down
         @dirm = nil
         @dir = nil
