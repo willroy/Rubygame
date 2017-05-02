@@ -3,11 +3,11 @@ require 'gosu'
 require_relative 'player'
 require_relative 'objects'
 #Requiring to player and object files (see files for more info)
-#
+
 #Main menu class for character selection
 class MenuWindow < Gosu::Window
     #Subclass of Gosu::Window graphics
-    attr_accessor :player_type 
+    attr_accessor :last_button_pressed 
     attr_accessor :closee
     def initialize
         super 640, 480
@@ -16,23 +16,17 @@ class MenuWindow < Gosu::Window
         @Menu_background = Gosu::Image.new("Resources/MenuBack.png")
 
         @buttons = [
-            Button.new(self, "button1", "Archer", 15, 15, true),
-            Button.new(self, "button2", "Mage", 15, 85, true),
-            Button.new(self, "button3", "Warrior", 15, 155, true),
-            Button.new(self, "button4", "Assassin", 15, 225, true),
-            Button.new(self, "button5", nil,  200, 225, nil)
+            Button.new(self, "ArcherButton", "Archer", 15, 15, true),
+            Button.new(self, "MageButton", "Mage", 15, 85, true),
+            Button.new(self, "WarriorButton", "Warrior", 15, 155, true),
+            Button.new(self, "AssassinButton", "Assassin", 15, 225, true),
+            Button.new(self, "EditorButton", nil,  200, 225, nil)
         ]
 
         #variables which become true if specific button is pressed
         @player_type = nil
         @closee = false
         #global player_type and close to make sure menu closes and player type is accessible
-    end
-    def player_type
-        @player_type
-    end
-    def closee
-        @closee
     end
     def needs_cursor?
         true
@@ -45,7 +39,7 @@ class MenuWindow < Gosu::Window
 
         @buttons.each do |b|
             if b.clicked?
-                @player_type = b.character
+                @last_button_pressed = b
                 @closee = b.close_state
                 puts "#{@closee}"
                 close
@@ -188,20 +182,19 @@ end
 
 while true
     menu = MenuWindow.new
-    player_type, closee = menu.player_type, menu.closee
-    game = GameWindow.new(player_type)
-    editor = EditorWindow.new(player_type, closee)
-    game.show()
-    break
-    if closee == nil
-        EditorStart(player_type, closee)
-        if closee == true
-            player_type, closee = menu.player_type, menu.closee
-            game.show(player_type)
-            break
-        end
+    menu.show()
+    button_pressed, closee = menu.last_button_pressed, menu.closee
+    
+    if closee == false
         break
+    elsif button_pressed == nil
+        next
+    elsif button_pressed.name == "EditorButton"
+        editor = EditorWindow.new(button_pressed.character, closee)
+        editor.show()
+    elsif button_pressed
+        game = GameWindow.new(button_pressed.character)
+        game.show()
     end
-end
 
-print("\n\n")
+end

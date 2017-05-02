@@ -51,7 +51,7 @@ class Wall
 end 
 
 class Button
-    attr_accessor :character, :close_state
+    attr_accessor :character, :close_state, :name
     def initialize(window, name, character, x, y, close_state=true)
         @window = window
         @name = name
