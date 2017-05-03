@@ -41,7 +41,6 @@ class MenuWindow < Gosu::Window
                 #if one is clicked then set that as the last button presesed and close
                 @last_button_pressed = b
                 @closee = b.close_state
-                puts "#{@closee}"
                 close
             end
         end
@@ -65,9 +64,7 @@ class EditorWindow < Gosu::Window
         self.caption = "Editor"
         @background_image = Gosu::Image.new("Resources/BackOne.png")
         @player_type = player_type
-        puts "#{@player_type}"
-
-        @object = Wall.new
+        @object = Wall.new(self)
         @buttonED = Gosu::Image.new(self, "Resources/buttonED.png")
         @buttonEDactive = Gosu::Image.new(self, "Resources/buttonEDa.png")
         @activeED = false
@@ -82,22 +79,20 @@ class EditorWindow < Gosu::Window
         #similar to the menu, except the object will follow the mouse if clicked (and held)
         @background_image.draw(0, 0, 0)
         @x, @y = self.mouse_x, self.mouse_y if Gosu::button_down? Gosu::MsLeft
-        #this (up) will set the x and y to the mouse coords as long as it is held down
-        @object.setpos(@x, @y)
-        @object.draw
         #draw and set the new position in the objects file
         @buttonED.draw(460, 400, 1) if buttonstate(@buttonED, 460, 400) == false
+        @object.draw
         if buttonstate(@buttonED, 460, 400)
             @buttonEDactive.draw(460, 400, 1)
             @activeED = true
             #using the button state like the menu to see if the mouse is in the range.
+        else
+            @object.setpos(@x, @y) 
         end
         if @activeED == true and Gosu::button_down? Gosu::MsLeft
-            @object.setpos(@x, @y)
             close
-            #set x and y last and closes editor window
         else
-        @activeED = false
+            @activeED = false
         end
     end
     
@@ -132,10 +127,9 @@ class GameWindow < Gosu::Window
         @player = Archer.new if @player_type == "Archer"
         @player = Warrior.new if @player_type == "Warrior"
         @player = Assassin.new if @player_type == "Assassin"
-        @object = Wall.new
+        @object = Wall.new(self)
         @count = 0
         @shoot = false
-        puts "4"
     end
     def update
         @player.left if Gosu::button_down? Gosu::KbA
