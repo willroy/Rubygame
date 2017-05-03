@@ -136,14 +136,20 @@ class GameWindow < Gosu::Window
         @player.down if Gosu::button_down? Gosu::KbS
         if Gosu::button_down? Gosu::KbK 
             @player.shot if @player_type == "Archer" or @player_type == "Mage"
+            if @object.collision(@xshot, @yshot)
+                puts "hey 1"
+                @object.attacked
+                puts "heyyyy 2"
+            end
         end
+        
     end
     def needs_cursor?
         true
         #makes the window show cursor over the top
     end
     def draw
-        @object.draw
+        @object.draw unless @object.dead
         @player.draw
         @background_image.draw(0, 0, 0)
         @player.testcollide()

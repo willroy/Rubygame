@@ -3,3 +3,8 @@ TODO LIST
 - Create sword and dagger animations for Assassin and Warrior
 - Clean more code and comment the code so i can understand it later
 - Make the wall so it can be damaged by a player
+- Test button attack to see where wrong.
+		- line 137 -> 142 in main
+		- line 33 -> 46 in object
+		- going wrong at line 139 main but works on line 38 in object file
+		- also implement a tracking variable for the arrow's location. USE THIS FOR coords2x and coords2y.

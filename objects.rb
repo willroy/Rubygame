@@ -13,7 +13,7 @@ module Objects
         @x, @y = x, y
     end
     def draw
-        @x, @y = YAML.load_file("Storage/coords.yml")
+        @x, @y, @health = YAML.load_file("Storage/coords.yml")
         @main_image.draw(@x, @y, 1)
     end
     def setpos(x=@x, y=@y)
@@ -29,9 +29,19 @@ module Objects
             end
         end
         false
-        #ah yes, the mighty ominous "buttonstate" function. this tests if the mouse is on the button by testing areas
-        #between the x and y of the bottom left and the top right coords
-        #returns true or false depending on what is going on.
+    end  
+    def collision(object=@main_image, coordsx=@x, coordsy=@y, coords2x, coords2y)
+        puts "#{coords2x}, #{coords2y}"
+        if coords2x.to_i > coordsx.to_i and coords2x.to_i < (coordsx.to_i + object.width)
+            if coords2y.to_i > coordsy.to_i.to_i and coords2y.to_i < (coordsy.to_i + object.height)
+                true
+                puts "heyy collisionnn"
+            else
+                false
+            end
+        else
+            false
+        end
     end
 end
 
@@ -41,10 +51,27 @@ class Wall
         @main_image = Gosu::Image.new("Resources/Objects/Stone_Wall.png")
         @x = 200
         @y = 260
+        @dead = false
         @dirm = nil
         @dir = nil
         @cool = 0
         @window = window
+        @health = 100
+        @x, @y, @health = YAML.load_file("Storage/coords.yml")
+    end
+    def dead
+        @dead
+    end
+    def attacked
+        puts "attacked"
+        @x, @y, @health = YAML.load_file("Storage/coords.yml")
+        @health = @health - 10
+        @xy.insert(@health)
+        File.open("Storage/coords.yml", "w") {|f| f.write(@xy.to_yaml) }
+        @xy.delete_at(2)
+        if @health == 0
+            @dead = true
+        end
     end
 end 
 
