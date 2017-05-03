@@ -1,6 +1,7 @@
 #!/ur/bin/ruby
 require 'gosu'
 require 'yaml'
+
 module Objects
     def testcollide
         @x += 4 if @x <= -17

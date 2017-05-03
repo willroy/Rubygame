@@ -18,9 +18,7 @@ class MenuWindow < Gosu::Window
         @buttons = [
             Button.new(self, "ArcherButton", "Archer", 15, 15, "Game"),
             Button.new(self, "MageButton", "Mage", 15, 85, "Game"),
-            Button.new(self, "WarriorButton", "Warrior", 15, 155, "Game"),
-            Button.new(self, "AssassinButton", "Assassin", 15, 225, "Game"),
-            Button.new(self, "EditorButton", nil,  200, 225, "Editor")
+            Button.new(self, "EditorButton", nil,  15, 155, "Editor")
         ]
 
         #variables which become true if specific button is pressed
