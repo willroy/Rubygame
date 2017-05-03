@@ -1,8 +1,5 @@
 TODO LIST
 
-comment all editor def and code to get out of way while in development
-pick up editor later
-create sword / dagger animations and images and code for warrior and assassin.
-
-CLEAN UP REST OF CODE (THE WHILE LOOP)
-
+- Create sword and dagger animations for Assassin and Warrior
+- Clean more code and comment the code so i can understand it later
+- Make the wall so it can be damaged by a player

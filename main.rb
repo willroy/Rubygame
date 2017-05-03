@@ -16,16 +16,15 @@ class MenuWindow < Gosu::Window
         @Menu_background = Gosu::Image.new("Resources/MenuBack.png")
 
         @buttons = [
-            Button.new(self, "ArcherButton", "Archer", 15, 15, true),
-            Button.new(self, "MageButton", "Mage", 15, 85, true),
-            Button.new(self, "WarriorButton", "Warrior", 15, 155, true),
-            Button.new(self, "AssassinButton", "Assassin", 15, 225, true),
-            Button.new(self, "EditorButton", nil,  200, 225, nil)
+            Button.new(self, "ArcherButton", "Archer", 15, 15, "Game"),
+            Button.new(self, "MageButton", "Mage", 15, 85, "Game"),
+            Button.new(self, "WarriorButton", "Warrior", 15, 155, "Game"),
+            Button.new(self, "AssassinButton", "Assassin", 15, 225, "Game"),
+            Button.new(self, "EditorButton", nil,  200, 225, "Editor")
         ]
 
         #variables which become true if specific button is pressed
-        @player_type = nil
-        @closee = false
+        @closee = "Close"
         #global player_type and close to make sure menu closes and player type is accessible
     end
     def needs_cursor?
@@ -36,9 +35,10 @@ class MenuWindow < Gosu::Window
     def draw
         @Menu_background.draw(0, 0, 0);
         @buttons.each {|b| b.draw}
-
+        #iterate through button list to draw all of them
         @buttons.each do |b|
             if b.clicked?
+                #if one is clicked then set that as the last button presesed and close
                 @last_button_pressed = b
                 @closee = b.close_state
                 puts "#{@closee}"
@@ -60,7 +60,7 @@ end
 
 class EditorWindow < Gosu::Window
     #need to stop screen going Black
-    def initialize(player_type, close)
+    def initialize(player_type)
         super 640, 480
         self.caption = "Editor"
         @background_image = Gosu::Image.new("Resources/BackOne.png")
@@ -79,19 +79,23 @@ class EditorWindow < Gosu::Window
     def update 
     end
     def draw
+        #similar to the menu, except the object will follow the mouse if clicked (and held)
         @background_image.draw(0, 0, 0)
         @x, @y = self.mouse_x, self.mouse_y if Gosu::button_down? Gosu::MsLeft
+        #this (up) will set the x and y to the mouse coords as long as it is held down
         @object.setpos(@x, @y)
         @object.draw
+        #draw and set the new position in the objects file
         @buttonED.draw(460, 400, 1) if buttonstate(@buttonED, 460, 400) == false
         if buttonstate(@buttonED, 460, 400)
             @buttonEDactive.draw(460, 400, 1)
             @activeED = true
+            #using the button state like the menu to see if the mouse is in the range.
         end
         if @activeED == true and Gosu::button_down? Gosu::MsLeft
-            @close = true
             @object.setpos(@x, @y)
             close
+            #set x and y last and closes editor window
         else
         @activeED = false
         end
@@ -114,6 +118,7 @@ class EditorWindow < Gosu::Window
 
     def button_down(id)
         close if id == Gosu::KbEscape
+        #escape function
     end
 end
 class GameWindow < Gosu::Window
@@ -185,12 +190,12 @@ while true
     menu.show()
     button_pressed, closee = menu.last_button_pressed, menu.closee
     
-    if closee == false
+    if closee == "Close"
         break
     elsif button_pressed == nil
         next
     elsif button_pressed.name == "EditorButton"
-        editor = EditorWindow.new(button_pressed.character, closee)
+        editor = EditorWindow.new(button_pressed.character)
         editor.show()
     elsif button_pressed
         game = GameWindow.new(button_pressed.character)
