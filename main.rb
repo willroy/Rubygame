@@ -113,26 +113,37 @@ class EditorWindow < Gosu::Window
         #escape function
     end
 end
+
+class GameState
+    attr_accessor :window, :objects
+    def initialize(window, objects)
+        @window = window
+        @objects = objects
+    end
+end
+
 class GameWindow < Gosu::Window
     def initialize(player_type)
         super 640, 480
         self.caption = "Game"
+        @objects = []
+        @game_state = GameState.new(self, @objects)
+
         @background_image = Gosu::Image.new("Resources/BackOne.png")
         @xshot = @xshot
         @yshot = @yshot
         @player_type = player_type
-        @player = Mage.new if @player_type == "Mage"
-        @player = Archer.new if @player_type == "Archer"
-        @object = Wall.new(self)
+        @player = Mage.new(@game_state) if @player_type == "Mage"
+        @player = Archer.new(@game_state) if @player_type == "Archer"
+        @object = Wall.new(@game_state)
         @count = 0
         @shoot = false
-        @objects = []
         @objects << @object
         @objects << @player
     end
     
     def update
-        @objects.each{|obj| obj.update(@objects)}
+        @objects.each{|obj| obj.update}
     end
 
     def needs_cursor?
@@ -141,32 +152,10 @@ class GameWindow < Gosu::Window
     end
     
     def draw
+        @background_image.draw(0, 0, 0)
+
         @objects.each{|obj| obj.draw}
 
-        @background_image.draw(0, 0, 0)
-        @player.testcollide()
-        if @player_type == "Archer" or @player_type == "Mage"
-            if Gosu::button_down? Gosu::KbK 
-                @shoot = true
-            end
-        end
-        if @count == 200 or @count == -200
-            @shoot = false
-        end
-        if @shoot == true
-            @direction, @xshot, @yshot, @shotright, @shotleft, @shotup, @shotdown = @player.shoot() 
-
-            @shotright.draw((@xshot + @count), @yshot, 2) if @direction == "right"
-            @shotleft.draw((@xshot + @count), @yshot, 2) if @direction == "left"
-            @shotup.draw(@xshot, (@yshot + @count), 2) if @direction == "up"
-            @shotdown.draw(@xshot, (@yshot + @count), 2) if @direction == "down"
-            @count += 10 if @direction == "right" or @direction == "down"
-            @count -= 10 if @direction == "left" or @direction == "up"
-        else
-            @count = 0 if @direction != "left"
-            @count = -30 if @direction == "left"
-        end
-        
     end
 
     def button_down(id)

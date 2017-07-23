@@ -7,7 +7,7 @@ class Objects
         @x, @y = x, y
     end
     def draw
-        @main_image.draw(@x.to_s.to_i, @y.to_s.to_i, 1)
+        @image.draw(@x.to_s.to_i, @y.to_s.to_i, 1)
     end
     def setpos(x=@x, y=@y)
         if !active?()
@@ -22,8 +22,7 @@ class Objects
         end
         false
     end  
-    def collision(object=@main_image, coordsx=@x, coordsy=@y, coords2x, coords2y)
-        puts "#{coords2x}, #{coords2y}"
+    def collision(object=@image, coordsx=@x, coordsy=@y, coords2x, coords2y)
         if coords2x.to_i > coordsx.to_i and coords2x.to_i < (coordsx.to_i + object.width)
             if coords2y.to_i > coordsy.to_i.to_i and coords2y.to_i < (coordsy.to_i + object.height)
                 true
@@ -35,33 +34,81 @@ class Objects
         end
     end
 
-    def update(objects)
+    def update
     end
 end
 
 class Wall < Objects
-    def initialize(window)
-        @main_image = Gosu::Image.new("Resources/Objects/Stone_Wall.png")
+    def initialize(game_state)
+        @image = Gosu::Image.new("Resources/Objects/Stone_Wall.png")
         @x = 200
         @y = 260
         @dirm = nil
         @dir = nil
         @cool = 0
-        @window = window
+        @game_state = game_state
         @health = 100
     end
-    def dead
-        @health <= 0
-    end
+
     def attacked
         @health -= 10
-        puts "Hit. Health now: #{@health}"
+        if @health <= 0
+            @game_state.objects.delete(self)
+            puts "The wall is dead"
+        else
+            puts "Hit. Health now: #{@health}"
+        end
+    end
+end 
+
+class Arrow < Objects
+    def initialize(game_state, direction, x, y)
+        case direction
+        when :right
+            @image = Gosu::Image.new("Resources/Projectiles/ShotArcher.png")
+            @xmod = 10
+            @ymod = 0
+        when :left
+            @image = Gosu::Image.new("Resources/Projectiles/Shotleft.png")
+            @xmod = -10
+            @ymod = 0
+        when :up
+            @image = Gosu::Image.new("Resources/Projectiles/Shotup.png")
+            @xmod = 0
+            @ymod = -10
+        else
+            @image = Gosu::Image.new("Resources/Projectiles/Shotdown.png")
+            @xmod = 0
+            @ymod = 10
+        end
+
+        @x = x
+        @y = y
+        @game_state = game_state
+        @count = 0
+    end
+
+    def attacked
+    end
+
+    def update
+        @game_state.objects.each { |obj| 
+            if obj != self && obj.collision(@x, @y) == true
+                @game_state.objects.delete self
+                obj.attacked
+            end
+        }
     end
 
     def draw
-        if ! dead()
-            super
+        if @count == 20
+            @game_state.objects.delete self
         end
+
+        @x = @x + @xmod
+        @y = @y + @ymod
+        @image.draw(@x, @y, 2)
+        @count += 1
     end
 end 
 
