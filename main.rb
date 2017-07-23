@@ -70,8 +70,10 @@ class EditorWindow < Gosu::Window
         true
         #makes the window show cursor over the top
     end
+
     def update 
     end
+    
     def draw
         #similar to the menu, except the object will follow the mouse if clicked (and held)
         @background_image.draw(0, 0, 0)
@@ -135,10 +137,12 @@ class GameWindow < Gosu::Window
         @player_type = player_type
         @player = Mage.new(@game_state) if @player_type == "Mage"
         @player = Archer.new(@game_state) if @player_type == "Archer"
-        @object = Wall.new(@game_state)
+        walls = YAML.load_file("Resources/walls.yaml")
+        walls.each do |wall| 
+            @objects << Wall.new(@game_state, wall)
+        end
         @count = 0
         @shoot = false
-        @objects << @object
         @objects << @player
     end
     
