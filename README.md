@@ -8,7 +8,7 @@ Linux Installation Instructions:
 
 1:
     Do "sudo apt-get install build-essential libsdl2-dev libsdl2-ttf-dev libpango1.0-dev \
-                         libgl1-mesa-dev libfreeimage-dev libopenal-dev libsndfile-dev"
+                         libgl1-mesa-dev libfreeimage-dev libopenal-dev libsndfile-dev libmpg123-dev"
     (this is for the dependencies)
 
 2:
