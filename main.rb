@@ -130,16 +130,19 @@ class GameWindow < Gosu::Window
         @objects << @object
         @objects << @player
     end
+    
     def update
-        @player.update(@objects)
+        @objects.each{|obj| obj.update(@objects)}
     end
+
     def needs_cursor?
         true
         #makes the window show cursor over the top
     end
+    
     def draw
-        @object.draw unless @object.dead()
-        @player.draw
+        @objects.each{|obj| obj.draw}
+
         @background_image.draw(0, 0, 0)
         @player.testcollide()
         if @player_type == "Archer" or @player_type == "Mage"

@@ -34,6 +34,9 @@ class Objects
             false
         end
     end
+
+    def update(objects)
+    end
 end
 
 class Wall < Objects

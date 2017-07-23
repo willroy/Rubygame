@@ -1,6 +1,6 @@
 #!/ur/bin/ruby
 require 'gosu'
-module Player
+class Player
     def testcollide
         @x += 4 if @x <= -17
         @x -= 4 if @x >= 600
@@ -31,8 +31,7 @@ module Player
     end
 end
 
-class Archer
-    include Player
+class Archer < Player
 
     attr_accessor :attacking
     def initialize
@@ -91,10 +90,14 @@ class Archer
             }
         end
     end
+
+    def draw
+        super
+        self.testcollide
+    end
 end 
 
-class Mage
-    include Player
+class Mage < Player
     def initialize
         @shotMageR = Gosu::Image.new("Resources/Mage/Mage_Rightshoot.png")
         @shotMageL = Gosu::Image.new("Resources/Mage/Mage_Left.png")
