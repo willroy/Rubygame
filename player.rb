@@ -72,6 +72,25 @@ class Archer
     def shoot()
         return @dir, @x, @y, @shotright, @shotleft, @shotup, @shotdown
     end
+
+    def update(objects)
+        self.left if Gosu::button_down? Gosu::KbA
+        self.right if Gosu::button_down? Gosu::KbD
+        self.up if Gosu::button_down? Gosu::KbW
+        self.down if Gosu::button_down? Gosu::KbS
+
+        if Gosu::button_down? Gosu::KbK 
+            self.attacking = true
+        elsif ! Gosu::button_down? Gosu::KbK and self.attacking
+            self.attacking = false
+            self.shot
+            objects.each { |obj| 
+                if obj != self && obj.collision(@x, @y) == true
+                    obj.attacked
+                end
+            }
+        end
+    end
 end 
 
 class Mage

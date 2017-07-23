@@ -2,7 +2,7 @@
 require 'gosu'
 require 'yaml'
 
-module Objects
+class Objects
     def warp(x, y)
         @x, @y = x, y
     end
@@ -36,13 +36,11 @@ module Objects
     end
 end
 
-class Wall
-    include Objects
+class Wall < Objects
     def initialize(window)
         @main_image = Gosu::Image.new("Resources/Objects/Stone_Wall.png")
         @x = 200
         @y = 260
-        @dead = false
         @dirm = nil
         @dir = nil
         @cool = 0
@@ -50,14 +48,17 @@ class Wall
         @health = 100
     end
     def dead
-        @dead
+        @health <= 0
     end
     def attacked
         @health -= 10
-        if @health <= 0
-            @dead = true
-        end
         puts "Hit. Health now: #{@health}"
+    end
+
+    def draw
+        if ! dead()
+            super
+        end
     end
 end 
 
