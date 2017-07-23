@@ -123,8 +123,6 @@ class GameWindow < Gosu::Window
         @player_type = player_type
         @player = Mage.new if @player_type == "Mage"
         @player = Archer.new if @player_type == "Archer"
-        @player = Warrior.new if @player_type == "Warrior"
-        @player = Assassin.new if @player_type == "Assassin"
         @object = Wall.new(self)
         @count = 0
         @shoot = false
@@ -134,12 +132,13 @@ class GameWindow < Gosu::Window
         @player.right if Gosu::button_down? Gosu::KbD
         @player.up if Gosu::button_down? Gosu::KbW
         @player.down if Gosu::button_down? Gosu::KbS
+
         if Gosu::button_down? Gosu::KbK 
+            @player.attacking = true
+        elsif ! Gosu::button_down? Gosu::KbK and @player.attacking
+            @player.attacking = false
             @player.shot if @player_type == "Archer" or @player_type == "Mage"
             if @object.collision(@xshot, @yshot) == true
-                string = x.to_s + y.to_s + health.to_s
-                puts "String: #{string}"
-                file.write('Storage/Info.txt', string)
                 @object.attacked
             end
         end

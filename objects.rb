@@ -7,14 +7,11 @@ module Objects
         @x, @y = x, y
     end
     def draw
-        @x, @y, @health = YAML.load_file("Storage/info.yml")
-        puts "#{@x}, #{@y}, #{@health}"
         @main_image.draw(@x.to_s.to_i, @y.to_s.to_i, 1)
     end
     def setpos(x=@x, y=@y)
         if !active?()
             @xy = [x, y]
-            File.open("Storage/info.yml", "w") {|f| f.write(@xy.to_yaml) }
         end
     end
     def active?
@@ -51,21 +48,16 @@ class Wall
         @cool = 0
         @window = window
         @health = 100
-        @x, @y, @health = YAML.load_file("Storage/info.yml")
     end
     def dead
         @dead
     end
     def attacked
-        config = YAML.load_file("Storage/info.yml")
-        puts "#{config}"
-        config[2] = config[2] - 10
-        File.open("Storage/info.yml", "w") do |out| 
-            yaml.dump(config, out)
-        end
+        @health -= 10
         if @health <= 0
             @dead = true
         end
+        puts "Hit. Health now: #{@health}"
     end
 end 
 

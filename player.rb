@@ -33,6 +33,8 @@ end
 
 class Archer
     include Player
+
+    attr_accessor :attacking
     def initialize
         @shotArcherR = Gosu::Image.new("Resources/Archer/Archer_Rightshoot.png")
         @shotArcherL = Gosu::Image.new("Resources/Archer/Archer_Leftshoot.png")
@@ -51,6 +53,7 @@ class Archer
         @dirm = nil
         @dir = nil
         @cool = 0
+        @attacking = false
     end
     def shot
         if @direction == @left
