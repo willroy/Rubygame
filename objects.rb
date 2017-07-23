@@ -3,23 +3,18 @@ require 'gosu'
 require 'yaml'
 
 module Objects
-    def testcollide
-        @x += 4 if @x <= -17
-        @x -= 4 if @x >= 600
-        @y += 4 if @y <= -15
-        @y -= 4 if @y >= 400
-    end
     def warp(x, y)
         @x, @y = x, y
     end
     def draw
-        @x, @y, @health = YAML.load_file("Storage/coords.yml")
-        @main_image.draw(@x, @y, 1)
+        @x, @y, @health = YAML.load_file("Storage/info.yml")
+        puts "#{@x}, #{@y}, #{@health}"
+        @main_image.draw(@x.to_s.to_i, @y.to_s.to_i, 1)
     end
     def setpos(x=@x, y=@y)
         if !active?()
             @xy = [x, y]
-            File.open("Storage/coords.yml", "w") {|f| f.write(@xy.to_yaml) }
+            File.open("Storage/info.yml", "w") {|f| f.write(@xy.to_yaml) }
         end
     end
     def active?
@@ -35,7 +30,6 @@ module Objects
         if coords2x.to_i > coordsx.to_i and coords2x.to_i < (coordsx.to_i + object.width)
             if coords2y.to_i > coordsy.to_i.to_i and coords2y.to_i < (coordsy.to_i + object.height)
                 true
-                puts "heyy collisionnn"
             else
                 false
             end
@@ -57,19 +51,19 @@ class Wall
         @cool = 0
         @window = window
         @health = 100
-        @x, @y, @health = YAML.load_file("Storage/coords.yml")
+        @x, @y, @health = YAML.load_file("Storage/info.yml")
     end
     def dead
         @dead
     end
     def attacked
-        puts "attacked"
-        @x, @y, @health = YAML.load_file("Storage/coords.yml")
-        @health = @health - 10
-        @xy.insert(@health)
-        File.open("Storage/coords.yml", "w") {|f| f.write(@xy.to_yaml) }
-        @xy.delete_at(2)
-        if @health == 0
+        config = YAML.load_file("Storage/info.yml")
+        puts "#{config}"
+        config[2] = config[2] - 10
+        File.open("Storage/info.yml", "w") do |out| 
+            yaml.dump(config, out)
+        end
+        if @health <= 0
             @dead = true
         end
     end

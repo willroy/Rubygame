@@ -2,6 +2,7 @@
 require 'gosu'
 require_relative 'player'
 require_relative 'objects'
+require 'yaml'
 #Requiring to player and object files (see files for more info)
 
 #Main menu class for character selection
@@ -52,9 +53,7 @@ class MenuWindow < Gosu::Window
     def button_down(id)
         close if id == Gosu::KbEscape
     end
-
 end
-
 class EditorWindow < Gosu::Window
     #need to stop screen going Black
     def initialize(player_type)
@@ -119,7 +118,8 @@ class GameWindow < Gosu::Window
         super 640, 480
         self.caption = "Game"
         @background_image = Gosu::Image.new("Resources/BackOne.png")
-
+        @xshot = @xshot
+        @yshot = @yshot
         @player_type = player_type
         @player = Mage.new if @player_type == "Mage"
         @player = Archer.new if @player_type == "Archer"
@@ -136,10 +136,11 @@ class GameWindow < Gosu::Window
         @player.down if Gosu::button_down? Gosu::KbS
         if Gosu::button_down? Gosu::KbK 
             @player.shot if @player_type == "Archer" or @player_type == "Mage"
-            if @object.collision(@xshot, @yshot)
-                puts "hey 1"
+            if @object.collision(@xshot, @yshot) == true
+                string = x.to_s + y.to_s + health.to_s
+                puts "String: #{string}"
+                file.write('Storage/Info.txt', string)
                 @object.attacked
-                puts "heyyyy 2"
             end
         end
         
@@ -153,7 +154,6 @@ class GameWindow < Gosu::Window
         @player.draw
         @background_image.draw(0, 0, 0)
         @player.testcollide()
-        @object.testcollide()
         if @player_type == "Archer" or @player_type == "Mage"
             if Gosu::button_down? Gosu::KbK 
                 @shoot = true
@@ -184,7 +184,8 @@ class GameWindow < Gosu::Window
 end
 
 while true
-    menu = MenuWindow.new
+    puts "Launching MenuWindow()"
+    menu = MenuWindow.new 
     menu.show()
     button_pressed, closee = menu.last_button_pressed, menu.closee
     
@@ -199,5 +200,4 @@ while true
         game = GameWindow.new(button_pressed.character)
         game.show()
     end
-
-end
+end 
