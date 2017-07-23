@@ -1,6 +1,6 @@
 #!/ur/bin/ruby
-require 'gosu'
 class Player
+    attr_reader :x, :y
     def testcollide
         @x += 4 if @x <= -17
         @x -= 4 if @x >= 600
@@ -26,6 +26,15 @@ class Player
     def warp(x, y)
         @x, @y = x, y
     end
+
+    def width
+        @image.width
+    end
+
+    def height
+        @image.height
+    end
+
     def left
         @direction = :left
         @image = @images[:left]
@@ -95,7 +104,9 @@ class Archer < Player
         elsif ! Gosu::button_down? Gosu::KbK and self.attacking
             self.attacking = false
             self.shot
-            @game_state.objects << Arrow.new(@game_state, @direction, @x, @y)
+            arrow_x = @x
+            arrow_y = @y + 50
+            @game_state.objects << Arrow.new(@game_state, self,  @direction, arrow_x, arrow_y)
         end
     end
 

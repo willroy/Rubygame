@@ -6,14 +6,26 @@ class Objects
     def warp(x, y)
         @x, @y = x, y
     end
+
+
+    def width
+        @image.width
+    end
+
+    def height
+        @image.height
+    end
+
     def draw
         @image.draw(@x.to_s.to_i, @y.to_s.to_i, 1)
     end
+     
     def setpos(x=@x, y=@y)
         if !active?()
             @xy = [x, y]
         end
     end
+
     def active?
         if @window.mouse_x > @x and @window.mouse_x < (@x + @main_image.width)
             if @window.mouse_y > @y and @window.mouse_y < (@y + @main_image.height)
@@ -22,16 +34,18 @@ class Objects
         end
         false
     end  
-    def collision(object=@image, coordsx=@x, coordsy=@y, coords2x, coords2y)
-        if coords2x.to_i > coordsx.to_i and coords2x.to_i < (coordsx.to_i + object.width)
-            if coords2y.to_i > coordsy.to_i.to_i and coords2y.to_i < (coordsy.to_i + object.height)
-                true
-            else
-                false
-            end
-        else
-            false
-        end
+
+    def inside(x, left, right)
+        left <= x && x <= right
+    end
+
+    def collision(other)
+        self_in_x = inside(@x, other.x, other.x + other.width)
+        self_in_y = inside(@y, other.y, other.y + other.height) 
+        other_in_x = inside(other.x, @x, @x + width) 
+        other_in_y = inside(other.y, @y, @y + height)
+
+        (self_in_x || other_in_x) && (self_in_y || other_in_y)
     end
 
     def update
@@ -39,6 +53,7 @@ class Objects
 end
 
 class Wall < Objects
+    attr_reader :x, :y
     def initialize(game_state)
         @image = Gosu::Image.new("Resources/Objects/Stone_Wall.png")
         @x = 200
@@ -62,7 +77,8 @@ class Wall < Objects
 end 
 
 class Arrow < Objects
-    def initialize(game_state, direction, x, y)
+    attr_reader :x, :y
+    def initialize(game_state, belongs_to, direction, x, y)
         case direction
         when :right
             @image = Gosu::Image.new("Resources/Projectiles/ShotArcher.png")
@@ -85,6 +101,7 @@ class Arrow < Objects
         @x = x
         @y = y
         @game_state = game_state
+        @belongs_to = belongs_to
         @count = 0
     end
 
@@ -93,7 +110,7 @@ class Arrow < Objects
 
     def update
         @game_state.objects.each { |obj| 
-            if obj != self && obj.collision(@x, @y) == true
+            if obj != self && obj != @belongs_to && collision(obj)
                 @game_state.objects.delete self
                 obj.attacked
             end
