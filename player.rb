@@ -152,9 +152,9 @@ class Mage < Player
         elsif ! Gosu::button_down? Gosu::KbK and self.attacking
             self.attacking = false
             self.shot
-            arrow_x = @x
-            arrow_y = @y + 50
-            @game_state.objects << Arrow.new(@game_state, self,  @direction, arrow_x, arrow_y)
+            plsmaball_x = @x
+            plsmaball_y = @y + 50
+            @game_state.objects << PlsmaBall.new(@game_state, self,  @direction, plsmaball_x, plsmaball_y)
         end
     end
 

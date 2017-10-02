@@ -76,7 +76,7 @@ class Wall < Objects
     end
 end 
 
-class Arrow < Objects
+class PlsmaBall < Objects
     attr_reader :x, :y
     def initialize(game_state, belongs_to, direction, x, y)
         case direction
@@ -99,7 +99,7 @@ class Arrow < Objects
         end
 
         @x = x
-        @y = y
+        @y = y - 20
         @game_state = game_state
         @belongs_to = belongs_to
         @count = 0
@@ -158,12 +158,12 @@ class Arrow < Objects
     end
 
     def update
-        @game_state.objects.each { |obj| 
+        @game_state.objects.each do |obj| 
             if obj != self && obj != @belongs_to && collision(obj)
                 @game_state.objects.delete self
                 obj.attacked
             end
-        }
+        end
     end
 
     def draw
@@ -203,9 +203,6 @@ class Button
             end
         end
         false
-        #ah yes, the mighty ominous "buttonstate" function. this tests if the mouse is on the button by testing areas
-        #between the x and y of the bottom left and the top right coords
-        #returns true or false depending on what is going on.
     end
     def draw
         if active?

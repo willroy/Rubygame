@@ -90,6 +90,7 @@ class GameWindow < Gosu::Window
     end
 
     def update
+        abort if Gosu::button_down? Gosu::KbEscape
         @objects.each{|obj| obj.update}
     end
     
