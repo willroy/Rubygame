@@ -7,7 +7,6 @@ class Player
         @y += 4 if @y <= -15
         @y -= 4 if @y >= 400
     end
-
     def collision(object=@image, coordsx=@x, coordsy=@y, coords2x, coords2y)
         if coords2x.to_i > coordsx.to_i and coords2x.to_i < (coordsx.to_i + object.width)
             if coords2y.to_i > coordsy.to_i.to_i and coords2y.to_i < (coordsy.to_i + object.height)
@@ -19,22 +18,17 @@ class Player
             false
         end
     end
-
     def attacked
     end
-
     def warp(x, y)
         @x, @y = x, y
     end
-
     def width
         @image.width
     end
-
     def height
         @image.height
     end
-
     def left
         @direction = :left
         @image = @images[:left]
@@ -61,7 +55,6 @@ class Player
 end
 
 class Archer < Player
-
     attr_accessor :attacking
     def initialize(game_state)
         @images = {
@@ -117,39 +110,56 @@ class Archer < Player
 end 
 
 class Mage < Player
+    attr_accessor :attacking
     def initialize(game_state)
-        @shotMageR = Gosu::Image.new("Resources/Mage/Mage_Rightshoot.png")
-        @shotMageL = Gosu::Image.new("Resources/Mage/Mage_Left.png")
-        @shotMageD = Gosu::Image.new("Resources/Mage/Mage_Front.png")
-        @shotright = Gosu::Image.new("Resources/Projectiles/ShotMage.png")
-        @shotleft = Gosu::Image.new("Resources/Projectiles/ShotMage.png")
-        @shotup = Gosu::Image.new("Resources/Projectiles/ShotMage.png")
-        @shotdown = Gosu::Image.new("Resources/Projectiles/ShotMage.png")
-        @down = Gosu::Image.new("Resources/Mage/Mage_Front.png")
-        @up = Gosu::Image.new("Resources/Mage/Mage_Back.png")
-        @left = Gosu::Image.new("Resources/Mage/Mage_Left.png")
-        @right = Gosu::Image.new("Resources/Mage/Mage_Right.png")
+        @images = {
+            shotMageR: Gosu::Image.new("Resources/Mage/Mage_Rightshoot.png"),
+            shotMageL: Gosu::Image.new("Resources/Mage/Mage_Left.png"),
+            shotMageD: Gosu::Image.new("Resources/Mage/Mage_Front.png"),
+            down: Gosu::Image.new("Resources/Mage/Mage_Front.png"),
+            up: Gosu::Image.new("Resources/Mage/Mage_Back.png"),
+            left: Gosu::Image.new("Resources/Mage/Mage_Left.png"),
+            right: Gosu::Image.new("Resources/Mage/Mage_Right.png"),
+        }
+        @game_state = game_state
         @x = 320
         @y = 240.0
-        @direction = @down
-        @cool = 0
+        @direction = :down
+        @image = @images[@direction]
+        @attacking = false
     end
     def shot
-        if @direction == @left
-            @direction = @shotMageL
-            @dir = "left"
-        elsif @direction == @right
-            @direction = @shotMageR
-            @dir = "right"
-        elsif @direction == @up
-            @dir = "up"
-        elsif @direction == @down
-            @direction = @shotMageD
-            @dir = "down"
-            
+        if @direction == :left
+            @image = @images[:shotMageL]
+        elsif @direction == :right
+            @image = @images[:shotMageR]
+        elsif @direction == :down
+            @image = @images[:shotMageD]
         end
     end
     def shoot()
         return @dir, @x, @y, @shotright, @shotleft, @shotup, @shotdown
+    end
+
+    def update
+        self.left if Gosu::button_down? Gosu::KbA
+        self.right if Gosu::button_down? Gosu::KbD
+        self.up if Gosu::button_down? Gosu::KbW
+        self.down if Gosu::button_down? Gosu::KbS
+
+        if Gosu::button_down? Gosu::KbK 
+            self.attacking = true
+        elsif ! Gosu::button_down? Gosu::KbK and self.attacking
+            self.attacking = false
+            self.shot
+            arrow_x = @x
+            arrow_y = @y + 50
+            @game_state.objects << Arrow.new(@game_state, self,  @direction, arrow_x, arrow_y)
+        end
+    end
+
+    def draw
+        super
+        self.testcollide
     end
 end 

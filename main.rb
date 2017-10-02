@@ -19,7 +19,6 @@ class MenuWindow < Gosu::Window
         @buttons = [
             Button.new(self, "ArcherButton", "Archer", 15, 15, "Game"),
             Button.new(self, "MageButton", "Mage", 15, 85, "Game"),
-            Button.new(self, "EditorButton", nil,  15, 155, "Editor")
         ]
 
         #variables which become true if specific button is pressed
@@ -54,67 +53,6 @@ class MenuWindow < Gosu::Window
         close if id == Gosu::KbEscape
     end
 end
-class EditorWindow < Gosu::Window
-    #need to stop screen going Black
-    def initialize(player_type)
-        super 640, 480
-        self.caption = "Editor"
-        @background_image = Gosu::Image.new("Resources/BackOne.png")
-        @player_type = player_type
-        @object = Wall.new(self)
-        @buttonED = Gosu::Image.new(self, "Resources/buttonED.png")
-        @buttonEDactive = Gosu::Image.new(self, "Resources/buttonEDa.png")
-        @activeED = false
-    end
-    def needs_cursor?
-        true
-        #makes the window show cursor over the top
-    end
-
-    def update 
-    end
-    
-    def draw
-        #similar to the menu, except the object will follow the mouse if clicked (and held)
-        @background_image.draw(0, 0, 0)
-        @x, @y = self.mouse_x, self.mouse_y if Gosu::button_down? Gosu::MsLeft
-        #draw and set the new position in the objects file
-        @buttonED.draw(460, 400, 1) if buttonstate(@buttonED, 460, 400) == false
-        @object.draw
-        if buttonstate(@buttonED, 460, 400)
-            @buttonEDactive.draw(460, 400, 1)
-            @activeED = true
-            #using the button state like the menu to see if the mouse is in the range.
-        else
-            @object.setpos(@x, @y) 
-        end
-        if @activeED == true and Gosu::button_down? Gosu::MsLeft
-            close
-        else
-            @activeED = false
-        end
-    end
-    
-    def buttonstate(button, coordsx, coordsy)
-        if self.mouse_x > coordsx and self.mouse_x < (coordsx + button.width)
-            if self.mouse_y > coordsy and self.mouse_y < (coordsy + button.height)
-                true
-            else
-                false
-            end
-        else
-            false
-        end
-        #ah yes, the mighty ominous "buttonstate" function. this tests if the mouse is on the button by testing areas
-        #between the x and y of the bottom left and the top right coords
-        #returns true or false depending on what is going on.
-    end
-
-    def button_down(id)
-        close if id == Gosu::KbEscape
-        #escape function
-    end
-end
 
 class GameState
     attr_accessor :window, :objects
@@ -146,13 +84,13 @@ class GameWindow < Gosu::Window
         @objects << @player
     end
     
-    def update
-        @objects.each{|obj| obj.update}
-    end
-
     def needs_cursor?
         true
         #makes the window show cursor over the top
+    end
+
+    def update
+        @objects.each{|obj| obj.update}
     end
     
     def draw

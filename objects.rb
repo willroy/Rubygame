@@ -81,6 +81,55 @@ class Arrow < Objects
     def initialize(game_state, belongs_to, direction, x, y)
         case direction
         when :right
+            @image = Gosu::Image.new("Resources/Projectiles/ShotMage.png")
+            @xmod = 10
+            @ymod = 0
+        when :left
+            @image = Gosu::Image.new("Resources/Projectiles/ShotMage.png")
+            @xmod = -10
+            @ymod = 0
+        when :up
+            @image = Gosu::Image.new("Resources/Projectiles/ShotMage.png")
+            @xmod = 0
+            @ymod = -10
+        else
+            @image = Gosu::Image.new("Resources/Projectiles/ShotMage.png")
+            @xmod = 0
+            @ymod = 10
+        end
+
+        @x = x
+        @y = y
+        @game_state = game_state
+        @belongs_to = belongs_to
+        @count = 0
+    end
+    def attacked
+    end
+    def update
+        @game_state.objects.each { |obj| 
+            if obj != self && obj != @belongs_to && collision(obj)
+                @game_state.objects.delete self
+                obj.attacked
+            end
+        }
+    end
+    def draw
+        if @count == 20
+            @game_state.objects.delete self
+        end
+
+        @x = @x + @xmod
+        @y = @y + @ymod
+        @image.draw(@x, @y, 2)
+        @count += 1
+    end
+end 
+class Arrow < Objects
+    attr_reader :x, :y
+    def initialize(game_state, belongs_to, direction, x, y)
+        case direction
+        when :right
             @image = Gosu::Image.new("Resources/Projectiles/ShotArcher.png")
             @xmod = 10
             @ymod = 0
