@@ -55,7 +55,7 @@ end
 class Wall < Objects
     attr_reader :x, :y
     def initialize(game_state, wall)
-        @image = Gosu::Image.new(game_state.window, "Resources/Objects/Stone_Wall.png", false,  wall["x"], wall["y"], wall["w"], wall["h"])
+        @image = Gosu::Image.new(game_state.window, "Resources/Objects/Stone_Wall.png", false,  wall["x"], wall["y"], wall["w"], wall["h"], :tileable => true)
         @x = wall["x"]
         @y = wall["y"]
         @dirm = nil
