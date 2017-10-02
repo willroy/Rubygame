@@ -194,7 +194,7 @@ class Button
         active? and Gosu::button_down? Gosu::MsLeft 
     end
     def button_down(id)
-        close if id == Gosu::KbEscape
+        abort if id == Gosu::KbEscape
     end
     def active?
         if @window.mouse_x > @x and @window.mouse_x < (@x + @main_image.width)
