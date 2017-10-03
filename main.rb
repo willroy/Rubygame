@@ -2,6 +2,7 @@
 require 'gosu'
 require_relative 'player'
 require_relative 'objects'
+require_relative 'npc'
 require 'yaml'
 #Requiring to player and object files (see files for more info)
 
@@ -10,6 +11,7 @@ class MenuWindow < Gosu::Window
     #Subclass of Gosu::Window graphics
     attr_accessor :last_button_pressed 
     attr_accessor :closee
+    #Used to see what the user wants to do next
     def initialize
         super 640, 480
         self.caption = "Menu"
@@ -75,6 +77,7 @@ class GameWindow < Gosu::Window
         @player_type = player_type
         @player = Mage.new(@game_state) if @player_type == "Mage"
         @player = Archer.new(@game_state) if @player_type == "Archer"
+        @npc = Zombie.new(@game_state, @player)
         walls = YAML.load_file("Resources/walls.yaml")
         walls.each do |wall| 
             @objects << Wall.new(@game_state, wall)
@@ -82,6 +85,7 @@ class GameWindow < Gosu::Window
         @count = 0
         @shoot = false
         @objects << @player
+        @objects << @npc
     end
     
     def needs_cursor?
@@ -90,19 +94,16 @@ class GameWindow < Gosu::Window
     end
 
     def update
-        abort if Gosu::button_down? Gosu::KbEscape
         @objects.each{|obj| obj.update}
     end
     
     def draw
         @background_image.draw(0, 0, 0)
-
         @objects.each{|obj| obj.draw}
-
     end
 
     def button_down(id)
-        close if id == Gosu::KbEscape
+        abort if id == Gosu::KbEscape
     end
 end
 
