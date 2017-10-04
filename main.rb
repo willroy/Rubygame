@@ -8,120 +8,126 @@ require 'yaml'
 
 #Main menu class for character selection
 class MenuWindow < Gosu::Window
-    #Subclass of Gosu::Window graphics
-    attr_accessor :last_button_pressed 
-    attr_accessor :closee
-    #Used to see what the user wants to do next
-    def initialize
-        super 640, 480
-        self.caption = "Menu"
-        #Title of window
-        @Menu_background = Gosu::Image.new("Resources/MenuBack.png")
+  #Subclass of Gosu::Window graphics
+  attr_accessor :last_button_pressed 
+  attr_accessor :closee
+  #Used to see what the user wants to do next
+  def initialize
+    super 640, 480
+    self.caption = "Menu"
+    #Title of window
+    @Menu_background = Gosu::Image.new("Resources/MenuBack.png")
 
-        @buttons = [
-            Button.new(self, "ArcherButton", "Archer", 15, 15, "Game"),
-            Button.new(self, "MageButton", "Mage", 15, 85, "Game"),
-        ]
+    @buttons = [
+      Button.new(self, "ArcherButton", "Archer", 15, 15, "Game"),
+      Button.new(self, "MageButton", "Mage", 15, 85, "Game"),
+    ]
 
-        #variables which become true if specific button is pressed
-        @closee = "Close"
-        #global player_type and close to make sure menu closes and player type is accessible
-    end
-    def needs_cursor?
-        true
-        #makes the window show cursor over the top
-    end
+    #variables which become true if specific button is pressed
+    @closee = "Close"
+    #global player_type and close to make sure menu closes and player type is accessible
+  end
+  def needs_cursor?
+    true
+    #makes the window show cursor over the top
+  end
 
-    def draw
-        @Menu_background.draw(0, 0, 0);
-        @buttons.each {|b| b.draw}
-        #iterate through button list to draw all of them
-        @buttons.each do |b|
-            if b.clicked?
-                #if one is clicked then set that as the last button presesed and close
-                @last_button_pressed = b
-                @closee = b.close_state
-                close
-            end
-        end
+  def draw
+    @Menu_background.draw(0, 0, 0);
+    @buttons.each {|b| b.draw}
+    #iterate through button list to draw all of them
+    @buttons.each do |b|
+      if b.clicked?
+        #if one is clicked then set that as the last button presesed and close
+        @last_button_pressed = b
+        @closee = b.close_state
+        close
+      end
     end
-        
-    def update
-        puts("X: #{self.mouse_x} Y: #{self.mouse_y}") if Gosu::button_down? Gosu::KbX
-        #testing feature for getting coords
-    end
+  end
 
-    def button_down(id)
-        close if id == Gosu::KbEscape
-    end
+  def update
+    puts("X: #{self.mouse_x} Y: #{self.mouse_y}") if Gosu::button_down? Gosu::KbX
+    #testing feature for getting coords
+  end
+
+  def button_down(id)
+    close if id == Gosu::KbEscape
+  end
 end
 
 class GameState
-    attr_accessor :window, :objects
-    def initialize(window, objects)
-        @window = window
-        @objects = objects
-    end
+  attr_accessor :window, :objects
+  def initialize(window, objects)
+    @window = window
+    @objects = objects
+  end
 end
 
 class GameWindow < Gosu::Window
-    def initialize(player_type)
-        super 640, 480
-        self.caption = "Game"
-        @objects = []
-        @game_state = GameState.new(self, @objects)
+  def initialize(player_type)
+    super 640, 480
+    self.caption = "Game"
+    @objects = []
+    @game_state = GameState.new(self, @objects)
 
-        @background_image = Gosu::Image.new("Resources/BackOne.png")
-        @xshot = @xshot
-        @yshot = @yshot
-        @player_type = player_type
-        @player = Mage.new(@game_state) if @player_type == "Mage"
-        @player = Archer.new(@game_state) if @player_type == "Archer"
-        @npc = Zombie.new(@game_state, @player)
-        walls = YAML.load_file("Resources/walls.yaml")
-        walls.each do |wall| 
-            @objects << Wall.new(@game_state, wall)
-        end
-        @count = 0
-        @shoot = false
-        @objects << @player
-        @objects << @npc
+    @background_image = Gosu::Image.new("Resources/BackOne.png")
+    @game_over_screen = Gosu::Image.new("Resources/Gameover.png")
+    @xshot = @xshot
+    @yshot = @yshot
+    @player_type = player_type
+    @player = Mage.new(@game_state) if @player_type == "Mage"
+    @player = Archer.new(@game_state) if @player_type == "Archer"
+    @npc = Zombie.new(@game_state, @player)
+    walls = YAML.load_file("Resources/walls.yaml")
+    walls.each do |wall| 
+      @objects << Wall.new(@game_state, wall)
     end
-    
-    def needs_cursor?
-        true
-        #makes the window show cursor over the top
-    end
+    @count = 0
+    @shoot = false
+    @objects << @player
+    @objects << @npc
+  end
 
-    def update
-        @objects.each{|obj| obj.update}
+  def needs_cursor?
+    true
+    #makes the window show cursor over the top
+  end
+  def update
+    @objects.each {|obj| obj.update} unless @player.dead == true
+    if Gosu::button_down? Gosu::KbEscape 
+     if @player.dead 
+       abort
+     end
     end
-    
-    def draw
-        @background_image.draw(0, 0, 0)
-        @objects.each{|obj| obj.draw}
-    end
+  end
 
-    def button_down(id)
-        abort if id == Gosu::KbEscape
-    end
+  def draw
+    @background_image.draw(0, 0, 0) unless @player.dead == true
+    @objects.each{|obj| obj.draw} unless @player.dead == true
+    @game_over_screen.draw(0, 0, 0) if @player.dead == true
+  end
+
+  def button_down(id)
+    abort if id == Gosu::KbEscape
+  end
 end
 
 while true
-    puts "Launching MenuWindow()"
-    menu = MenuWindow.new 
-    menu.show()
-    button_pressed, closee = menu.last_button_pressed, menu.closee
-    
-    if closee == "Close"
-        break
-    elsif button_pressed == nil
-        next
-    elsif button_pressed.name == "EditorButton"
-        editor = EditorWindow.new(button_pressed.character)
-        editor.show()
-    elsif button_pressed
-        game = GameWindow.new(button_pressed.character)
-        game.show()
-    end
+  puts "Launching MenuWindow()"
+  menu = MenuWindow.new 
+  menu.show()
+  button_pressed, closee = menu.last_button_pressed, menu.closee
+
+  if closee == "Close"
+    break
+  elsif button_pressed == nil
+    next
+  elsif button_pressed.name == "EditorButton"
+    editor = EditorWindow.new(button_pressed.character)
+    editor.show()
+  elsif button_pressed
+    game = GameWindow.new(button_pressed.character)
+    game.show()
+  end
 end 
