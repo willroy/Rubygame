@@ -53,10 +53,13 @@ class Player
   def draw 
     @image.draw(@x, @y, 1)
   end
+  def dead
+    @dead  
+  end
 end
 
 class Archer < Player
-  attr_accessor :attacking, :dead, :images, :direction
+  attr_accessor :attacking, :images, :direction, :x, :y
   def initialize(game_state)
     @images = {
       shotArcherR: Gosu::Image.new("Resources/Archer/Archer_Rightshoot.png"),

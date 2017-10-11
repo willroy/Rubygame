@@ -47,8 +47,8 @@ class Objects
 
     (self_in_x || other_in_x) && (self_in_y || other_in_y)
   end
-
-  def update
+  def dead
+    @dead
   end
 end
 
@@ -63,10 +63,14 @@ class Wall < Objects
     @cool = 0
     @game_state = game_state
     @health = 100
+    @dead = false
   end
 
+  def update
+  end
   def attacked
     @health -= 10
+    @dead = true if @health <= 0
     @game_state.objects.delete(self) if @health <= 0
   end
 end 
@@ -174,15 +178,15 @@ class Arrow < Objects
 end 
 
 class Button
-  attr_accessor :character, :close_state, :name
-  def initialize(window, name, character, x, y, close_state=true)
+  attr_accessor :character, :protocol, :name
+  def initialize(window, name, character, x, y, protocol=true)
     @window = window
     @name = name
     @character = character
-    @close_state = close_state
+    @protocol = protocol
     @x = x
     @y = y
-    @main_image = Gosu::Image.new(@window, "Resources/#{name}.png")
+    @main_image = Gosu::Image.new(@window, "Resources/#{name}.png") #@window
     @active_image = Gosu::Image.new(@window, "Resources/#{name}a.png")
   end
   def clicked?
@@ -205,5 +209,7 @@ class Button
     else
       @main_image.draw(@x, @y, 1)
     end
+  end
+  def update
   end
 end
