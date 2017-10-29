@@ -119,12 +119,17 @@ while true
       puts "Launching GameWindow"
       game = GameWindow.new(menu.character)
       puts "show"
-      game.show()
+      begin
+        game.show()
+      rescue Exception => e
+        puts e
+      end
       puts "showdone?"
     else
       break
     end
-  rescue
+  rescue Exception => e
+    puts e
     break
   end
 end
